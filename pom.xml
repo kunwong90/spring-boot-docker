@@ -46,6 +46,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <useSystemClassLoader>false</useSystemClassLoader>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
 
@@ -68,8 +69,8 @@
                     <forceTags>true</forceTags>
                     <!--In order for this to succeed, at least one imageTag must be present in the config, multiple tags can be used.-->
                     <imageTags>
-                        <imageTag>${project.version}</imageTag>
-                        <!--<imageTag>latest</imageTag>-->
+                        <!--<imageTag>${project.version}</imageTag>-->
+                        <imageTag>latest</imageTag>
                     </imageTags>
                 </configuration>
             </plugin>
