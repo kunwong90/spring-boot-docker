@@ -51,6 +51,7 @@
                 <configuration>
                     <imageName>test/spring-boot-docker</imageName>
                     <dockerDirectory>src/main/docker</dockerDirectory>
+                    <dockerHost>http://192.168.65.129:2375</dockerHost>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
