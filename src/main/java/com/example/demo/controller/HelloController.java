@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -51,5 +52,11 @@ public class HelloController {
         studentService.save();
 
         return "my first spring-boot-docker application";
+    }
+
+    @GetMapping(value = "/list")
+    public List<String> list() throws Exception {
+        LOGGER.info("list method");
+        return studentService.findAll().get();
     }
 }
