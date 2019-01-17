@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.IStudentService;
+import com.example.demo.thread.MDCRunnable;
 import com.example.demo.thread.MDCThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,13 @@ public class HelloController {
         });
 
         studentService.save();
+
+        new Thread(new MDCRunnable() {
+            @Override
+            public void runWithMDC() {
+                LOGGER.info("MDCRunnable execute");
+            }
+        }).start();
 
         return "my first spring-boot-docker application";
     }
