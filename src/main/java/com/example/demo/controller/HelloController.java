@@ -59,6 +59,7 @@ public class HelloController {
             }
         }).start();
 
+        LOGGER.info("controller over");
         return "my first spring-boot-docker application";
     }
 

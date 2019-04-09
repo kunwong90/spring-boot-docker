@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -24,10 +25,13 @@ public class StudentServiceImpl implements IStudentService {
 
     MDCThreadPoolExecutor threadPoolExecutor1 = MDCThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
+    @Resource
+    private IStudentService self;
 
     @Override
     public void save() {
         LOGGER.info("execute save method");
+        self.findAll();
         new Thread(new MDCRunnable() {
             @Override
             public void runWithMDC() {
@@ -42,7 +46,7 @@ public class StudentServiceImpl implements IStudentService {
         threadPoolExecutor1.execute(()-> {
             LOGGER.info("threadPoolExecutor1 executor");
         });
-        findAll();
+        LOGGER.info("over");
     }
 
     @Async

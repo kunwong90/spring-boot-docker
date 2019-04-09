@@ -9,6 +9,6 @@ public class CustomWebMvcConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogTraceInterceptor()).addPathPatterns("/**");
+        //registry.addInterceptor(new LogTraceInterceptor()).addPathPatterns("/**");
     }
 }
