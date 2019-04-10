@@ -3,17 +3,16 @@ package com.example.demo.thread;
 import org.slf4j.MDC;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public abstract class MDCRunnable implements Runnable {
-
+public abstract class MdcCallable<V> implements Callable {
     private Map<String, String> context;
 
-    public MDCRunnable() {
+    public MdcCallable() {
         this.context = MDC.getCopyOfContextMap();
     }
-
     @Override
-    public void run() {
+    public V call() throws Exception {
         Map<String, String> previous = MDC.getCopyOfContextMap();
         if (context == null) {
             MDC.clear();
@@ -21,7 +20,7 @@ public abstract class MDCRunnable implements Runnable {
             MDC.setContextMap(context);
         }
         try {
-            runWithMDC();
+            return callWithMdc();
         } finally {
             if (previous == null) {
                 MDC.clear();
@@ -31,5 +30,6 @@ public abstract class MDCRunnable implements Runnable {
         }
     }
 
-    public abstract void runWithMDC();
+
+    public abstract V callWithMdc();
 }

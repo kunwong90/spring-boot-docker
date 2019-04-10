@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.IStudentService;
-import com.example.demo.thread.MDCRunnable;
-import com.example.demo.thread.MDCThreadPoolExecutor;
+import com.example.demo.thread.MdcRunnable;
+import com.example.demo.thread.MdcThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +22,9 @@ public class HelloController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
 
 
-    MDCThreadPoolExecutor threadPoolExecutor = MDCThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
+    MdcThreadPoolExecutor threadPoolExecutor = MdcThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
-    MDCThreadPoolExecutor threadPoolExecutor1 = MDCThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
+    MdcThreadPoolExecutor threadPoolExecutor1 = MdcThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
     @Value(value = "${envName}")
     private String envName;
@@ -52,7 +52,7 @@ public class HelloController {
 
         studentService.save();
 
-        new Thread(new MDCRunnable() {
+        new Thread(new MdcRunnable() {
             @Override
             public void runWithMDC() {
                 LOGGER.info("MDCRunnable execute");

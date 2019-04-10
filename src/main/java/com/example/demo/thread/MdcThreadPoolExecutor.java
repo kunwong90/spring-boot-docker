@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  *
  */
-public class MDCThreadPoolExecutor extends ThreadPoolExecutor {
+public class MdcThreadPoolExecutor extends ThreadPoolExecutor {
 
     final private boolean useFixedContext;
     final private Map<String, String> fixedContext;
@@ -18,30 +18,30 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor {
     /**
      * Pool where task threads take MDC from the submitting thread.
      */
-    public static MDCThreadPoolExecutor newWithInheritedMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+    public static MdcThreadPoolExecutor newWithInheritedMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
                                                             TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        return new MDCThreadPoolExecutor(null, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        return new MdcThreadPoolExecutor(null, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
     /**
      * Pool where task threads take fixed MDC from the thread that creates the pool.
      */
-    public static MDCThreadPoolExecutor newWithCurrentMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+    public static MdcThreadPoolExecutor newWithCurrentMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
                                                           TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        return new MDCThreadPoolExecutor(MDC.getCopyOfContextMap(), corePoolSize, maximumPoolSize, keepAliveTime, unit,
+        return new MdcThreadPoolExecutor(MDC.getCopyOfContextMap(), corePoolSize, maximumPoolSize, keepAliveTime, unit,
                 workQueue);
     }
 
     /**
      * Pool where task threads always have a specified, fixed MDC.
      */
-    public static MDCThreadPoolExecutor newWithFixedMdc(Map<String, String> fixedContext, int corePoolSize,
+    public static MdcThreadPoolExecutor newWithFixedMdc(Map<String, String> fixedContext, int corePoolSize,
                                                         int maximumPoolSize, long keepAliveTime, TimeUnit unit,
                                                         BlockingQueue<Runnable> workQueue) {
-        return new MDCThreadPoolExecutor(fixedContext, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+        return new MdcThreadPoolExecutor(fixedContext, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
-    private MDCThreadPoolExecutor(Map<String, String> fixedContext, int corePoolSize, int maximumPoolSize,
+    private MdcThreadPoolExecutor(Map<String, String> fixedContext, int corePoolSize, int maximumPoolSize,
                                   long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
         this.fixedContext = fixedContext;
@@ -63,23 +63,20 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     public static Runnable wrap(final Runnable runnable, final Map<String, String> context) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                Map<String, String> previous = MDC.getCopyOfContextMap();
-                if (context == null) {
+        return () -> {
+            Map<String, String> previous = MDC.getCopyOfContextMap();
+            if (context == null) {
+                MDC.clear();
+            } else {
+                MDC.setContextMap(context);
+            }
+            try {
+                runnable.run();
+            } finally {
+                if (previous == null) {
                     MDC.clear();
                 } else {
-                    MDC.setContextMap(context);
-                }
-                try {
-                    runnable.run();
-                } finally {
-                    if (previous == null) {
-                        MDC.clear();
-                    } else {
-                        MDC.setContextMap(previous);
-                    }
+                    MDC.setContextMap(previous);
                 }
             }
         };
