@@ -1,6 +1,6 @@
 package com.example.demo.aop;
 
-import com.example.demo.util.UUIDUtil;
+import com.example.demo.util.TraceIdGenerator;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,7 +36,7 @@ public class MDCLogAop {
             if (StringUtils.hasText(traceId)) {
                 MDC.put(TRACE_ID, traceId);
             } else {
-                MDC.put(TRACE_ID, UUIDUtil.getUUID());
+                MDC.put(TRACE_ID, TraceIdGenerator.generate());
             }
             return pjp.proceed();
         } finally {

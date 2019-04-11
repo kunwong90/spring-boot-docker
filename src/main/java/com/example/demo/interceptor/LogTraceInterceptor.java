@@ -1,6 +1,6 @@
 package com.example.demo.interceptor;
 
-import com.example.demo.util.UUIDUtil;
+import com.example.demo.util.TraceIdGenerator;
 import org.slf4j.MDC;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -13,7 +13,7 @@ public class LogTraceInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        MDC.put(TRACE_ID, UUIDUtil.getUUID());
+        MDC.put(TRACE_ID, TraceIdGenerator.generate());
         return true;
     }
 
