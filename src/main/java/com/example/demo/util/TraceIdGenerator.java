@@ -2,6 +2,17 @@ package com.example.demo.util;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 产生规则是:服务器 IP + 产生 ID 时候的时间 + 自增序列 + 当前进程号,比如:
+ *
+ * 0ad1348f1403169275002100356696
+ *
+ * 前 8 位 0ad1348f 即产生 TraceId 的机器的 IP,这是一个十六进制的数字,每两位代表 IP 中的一段,
+ * 我们把这个数字,按每两位转成 10 进制即可得到常见的 IP 地址表示方式 10.209.52.143,
+ * 大家也可以根据这个规律来查找到请求经过的第一个服务器.
+ * 后面的 13 位 1403169275002 是产生 TraceId 的时间.之后的 4 位 1003 是一个自增的序列,从 1000 涨到 9000,
+ * 到达 9000 后回到 1000 再开始往上涨.最后的 5 位 56696 是当前的进程 ID,为了防止单机多进程出现 TraceId 冲突的情况，所以在 TraceId 末尾添加了当前的进程 ID.
+ */
 public class TraceIdGenerator {
 
     private static String IP_16 = "ffffffff";
