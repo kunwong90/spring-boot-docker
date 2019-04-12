@@ -34,7 +34,7 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public void save() {
-        LOGGER.info("execute save method");
+        LOGGER.info("execute save method.thread id = {}", Thread.currentThread().getId());
         new Thread(new MdcRunnable() {
             @Override
             public void runWithMDC() {
@@ -66,5 +66,8 @@ public class StudentServiceImpl implements IStudentService {
         return new AsyncResult<>(Arrays.asList("Hello World", "Spring Boot is awesome"));
     }
 
-
+    @Override
+    public void log() {
+        LOGGER.info("log method.thread id = {}", Thread.currentThread().getId());
+    }
 }

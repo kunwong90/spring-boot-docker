@@ -6,6 +6,7 @@ import com.example.demo.thread.MdcThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,6 +22,8 @@ public class HelloController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HelloController.class);
 
+    @Resource(name = "threadPoolTaskExecutor")
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     MdcThreadPoolExecutor threadPoolExecutor = MdcThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
@@ -67,5 +70,18 @@ public class HelloController {
     public List<String> list() throws Exception {
         LOGGER.info("list method.thread id = {}", Thread.currentThread().getId());
         return studentService.findAll().get();
+    }
+
+
+    @GetMapping(value = "/thread")
+    public String thread() {
+        threadPoolTaskExecutor.execute(new MdcRunnable() {
+            @Override
+            public void runWithMDC() {
+                LOGGER.info("thread method.thread id = {}", Thread.currentThread().getId());
+                studentService.log();
+            }
+        });
+        return "ok";
     }
 }

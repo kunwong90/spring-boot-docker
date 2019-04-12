@@ -11,4 +11,6 @@ public interface IStudentService {
     void save();
 
     Future<List<String>> findAll();
+
+    void log();
 }
