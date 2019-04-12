@@ -10,6 +10,8 @@ import java.util.TimeZone;
 
 public class TracerUtils {
 
+    public static final String TRACE_ID = "traceId";
+
     public static String P_ID_CACHE = null;
 
     /**

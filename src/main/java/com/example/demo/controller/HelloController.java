@@ -65,7 +65,7 @@ public class HelloController {
 
     @GetMapping(value = "/list")
     public List<String> list() throws Exception {
-        LOGGER.info("list method");
+        LOGGER.info("list method.thread id = {}", Thread.currentThread().getId());
         return studentService.findAll().get();
     }
 }
