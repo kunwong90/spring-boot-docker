@@ -2,8 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.service.IStudentService;
 import com.example.demo.service.IThreadPoolService;
-import com.example.demo.thread.MdcCallable;
-import com.example.demo.thread.MdcRunnable;
+import com.example.demo.thread.AbstractTracerCallable;
+import com.example.demo.thread.AbstractTracerRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -31,7 +31,7 @@ public class ThreadPoolServiceImpl implements IThreadPoolService {
         threadPoolTaskExecutor.execute(() ->{
             LOGGER.info("ThreadPoolTaskExecutor exec, thread id = {}", Thread.currentThread().getId());
         });
-        MdcRunnable mdcRunnable = new MdcRunnable() {
+        AbstractTracerRunnable mdcRunnable = new AbstractTracerRunnable() {
             @Override
             public void runWithMDC() {
                 LOGGER.info("ThreadPoolTaskExecutor MDCRunnable, thread id = {}", Thread.currentThread().getId());
@@ -49,7 +49,7 @@ public class ThreadPoolServiceImpl implements IThreadPoolService {
             }
         });
 
-        Future<String> myFuture = threadPoolTaskExecutor.submit(new MdcCallable<String>() {
+        Future<String> myFuture = threadPoolTaskExecutor.submit(new AbstractTracerCallable<String>() {
             @Override
             public String callWithMdc() {
                 LOGGER.info("MdcCallable exec");

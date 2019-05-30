@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.service.IStudentService;
-import com.example.demo.thread.MdcRunnable;
-import com.example.demo.thread.MdcThreadPoolExecutor;
+import com.example.demo.thread.AbstractTracerRunnable;
+import com.example.demo.thread.TracerThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,9 +25,9 @@ public class HelloController {
     @Resource(name = "threadPoolTaskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    MdcThreadPoolExecutor threadPoolExecutor = MdcThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
+    TracerThreadPoolExecutor threadPoolExecutor = TracerThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
-    MdcThreadPoolExecutor threadPoolExecutor1 = MdcThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
+    TracerThreadPoolExecutor threadPoolExecutor1 = TracerThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
     @Value(value = "${envName}")
     private String envName;
@@ -55,7 +55,7 @@ public class HelloController {
 
         studentService.save();
 
-        new Thread(new MdcRunnable() {
+        new Thread(new AbstractTracerRunnable() {
             @Override
             public void runWithMDC() {
                 LOGGER.info("MDCRunnable execute");
@@ -75,7 +75,7 @@ public class HelloController {
 
     @GetMapping(value = "/thread")
     public String thread() {
-        threadPoolTaskExecutor.execute(new MdcRunnable() {
+        threadPoolTaskExecutor.execute(new AbstractTracerRunnable() {
             @Override
             public void runWithMDC() {
                 LOGGER.info("thread method.thread id = {}", Thread.currentThread().getId());

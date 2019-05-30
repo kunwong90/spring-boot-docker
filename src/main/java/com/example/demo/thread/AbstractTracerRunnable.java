@@ -3,16 +3,17 @@ package com.example.demo.thread;
 import org.slf4j.MDC;
 
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-public abstract class MdcCallable<V> implements Callable {
+public abstract class AbstractTracerRunnable implements Runnable {
+
     private Map<String, String> context;
 
-    public MdcCallable() {
+    public AbstractTracerRunnable() {
         this.context = MDC.getCopyOfContextMap();
     }
+
     @Override
-    public V call() throws Exception {
+    public void run() {
         Map<String, String> previous = MDC.getCopyOfContextMap();
         if (context == null) {
             MDC.clear();
@@ -20,9 +21,10 @@ public abstract class MdcCallable<V> implements Callable {
             MDC.setContextMap(context);
         }
         try {
-            return callWithMdc();
+            runWithMDC();
         } finally {
             if (previous == null) {
+                // 防止使用线程池导致后面打印的traceId一致
                 MDC.clear();
             } else {
                 MDC.setContextMap(previous);
@@ -30,6 +32,5 @@ public abstract class MdcCallable<V> implements Callable {
         }
     }
 
-
-    public abstract V callWithMdc();
+    public abstract void runWithMDC();
 }

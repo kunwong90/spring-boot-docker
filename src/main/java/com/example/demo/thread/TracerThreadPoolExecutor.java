@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  *
  */
-public class MdcThreadPoolExecutor extends ThreadPoolExecutor {
+public class TracerThreadPoolExecutor extends ThreadPoolExecutor {
 
     final private boolean useFixedContext;
     final private Map<String, String> fixedContext;
@@ -18,31 +18,31 @@ public class MdcThreadPoolExecutor extends ThreadPoolExecutor {
     /**
      * Pool where task threads take MDC from the submitting thread.
      */
-    public static MdcThreadPoolExecutor newWithInheritedMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
-                                                            TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        return new MdcThreadPoolExecutor(null, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+    public static TracerThreadPoolExecutor newWithInheritedMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+                                                               TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+        return new TracerThreadPoolExecutor(null, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
     /**
      * Pool where task threads take fixed MDC from the thread that creates the pool.
      */
-    public static MdcThreadPoolExecutor newWithCurrentMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
-                                                          TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        return new MdcThreadPoolExecutor(MDC.getCopyOfContextMap(), corePoolSize, maximumPoolSize, keepAliveTime, unit,
+    public static TracerThreadPoolExecutor newWithCurrentMdc(int corePoolSize, int maximumPoolSize, long keepAliveTime,
+                                                             TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+        return new TracerThreadPoolExecutor(MDC.getCopyOfContextMap(), corePoolSize, maximumPoolSize, keepAliveTime, unit,
                 workQueue);
     }
 
     /**
      * Pool where task threads always have a specified, fixed MDC.
      */
-    public static MdcThreadPoolExecutor newWithFixedMdc(Map<String, String> fixedContext, int corePoolSize,
-                                                        int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-                                                        BlockingQueue<Runnable> workQueue) {
-        return new MdcThreadPoolExecutor(fixedContext, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
+    public static TracerThreadPoolExecutor newWithFixedMdc(Map<String, String> fixedContext, int corePoolSize,
+                                                           int maximumPoolSize, long keepAliveTime, TimeUnit unit,
+                                                           BlockingQueue<Runnable> workQueue) {
+        return new TracerThreadPoolExecutor(fixedContext, corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
 
-    private MdcThreadPoolExecutor(Map<String, String> fixedContext, int corePoolSize, int maximumPoolSize,
-                                  long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+    private TracerThreadPoolExecutor(Map<String, String> fixedContext, int corePoolSize, int maximumPoolSize,
+                                     long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
         this.fixedContext = fixedContext;
         this.useFixedContext = (fixedContext != null);
