@@ -5,7 +5,10 @@ import org.slf4j.MDC;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public abstract class AbstractTracerCallable<V> implements Callable {
+/**
+ * @author wangkun
+ */
+public abstract class AbstractTracerCallable<V> implements Callable<V> {
     private Map<String, String> context;
 
     public AbstractTracerCallable() {
