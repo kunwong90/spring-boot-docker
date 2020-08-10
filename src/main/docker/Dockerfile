@@ -1,6 +1,7 @@
 FROM java:8
 VOLUME /opt/logs
 COPY spring-boot-docker-0.0.1-SNAPSHOT.jar web.jar
+COPY --from=hengyunabc/arthas:latest /opt/arthas /opt/arthas
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","web.jar"]
 
