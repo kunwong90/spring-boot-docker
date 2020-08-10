@@ -2,8 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.service.IStudentService;
 import com.example.demo.service.IThreadPoolService;
-import com.example.demo.thread.MdcRunnable;
-import com.example.demo.thread.MdcThreadPoolExecutor;
+import com.example.demo.thread.AbstractTracerRunnable;
+import com.example.demo.thread.TracerThreadPoolExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -22,9 +22,9 @@ public class StudentServiceImpl implements IStudentService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StudentServiceImpl.class);
 
-    MdcThreadPoolExecutor threadPoolExecutor = MdcThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
+    TracerThreadPoolExecutor threadPoolExecutor = TracerThreadPoolExecutor.newWithCurrentMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
-    MdcThreadPoolExecutor threadPoolExecutor1 = MdcThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
+    TracerThreadPoolExecutor threadPoolExecutor1 = TracerThreadPoolExecutor.newWithInheritedMdc(1, 1, 0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(20));
 
     @Resource
     private IStudentService self;
@@ -35,11 +35,11 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public void save() {
         LOGGER.info("execute save method.thread id = {}", Thread.currentThread().getId());
-        new Thread(new MdcRunnable() {
+        new Thread(new AbstractTracerRunnable() {
             @Override
             public void runWithMDC() {
                 LOGGER.info("MDCRunnable from service");
-                new Thread(new MdcRunnable() {
+                new Thread(new AbstractTracerRunnable() {
                     @Override
                     public void runWithMDC() {
                         LOGGER.info("MDCRunnable MDCRunnable");
