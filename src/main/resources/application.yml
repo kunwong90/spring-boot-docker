@@ -4,5 +4,5 @@ spring:
 server:
   port: 8080
 arthas:
-  agent-id=hsehdfsfghhwertyfad
-  tunnel-server=ws://172.17.0.3:7777/ws
+  agent-id: hsehdfsfghhwertyfad
+  tunnel-server: ws://192.168.65.128:7777/ws
