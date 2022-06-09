@@ -61,8 +61,9 @@ public class StudentServiceImpl implements IStudentService {
     @Async
     @Override
     public Future<List<String>> findAll() {
-        LOGGER.info("Repository in action");
+        LOGGER.info("Repository in action start");
         threadPoolService.run();
+        LOGGER.info("Repository in action end");
         return new AsyncResult<>(Arrays.asList("Hello World", "Spring Boot is awesome"));
     }
 

@@ -3,3 +3,5 @@ spring:
     active: ${ENV}
 server:
   port: 8080
+  tomcat:
+    max-threads: 1
