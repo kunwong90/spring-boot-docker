@@ -1,6 +1,6 @@
 package com.example.demo.aop;
 
-import com.example.demo.annotation.Idempotent;
+import com.example.demo.annotation.ConcurrencyLock;
 import com.example.demo.entity.User;
 import com.example.demo.redis.lock.RedisDistributedLock;
 import org.apache.commons.lang3.StringUtils;
@@ -18,20 +18,20 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Aspect
-public class IdempotentAop {
+public class ConcurrencyLockAop {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IdempotentAop.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConcurrencyLockAop.class);
 
     @Resource
     private RedisDistributedLock redisDistributedLock;
 
-    @Pointcut(value = "@annotation(com.example.demo.annotation.Idempotent)")
-    public void idempotentCheckAspect() {
+    @Pointcut(value = "@annotation(com.example.demo.annotation.ConcurrencyLock)")
+    public void concurrencyLockAspect() {
     }
 
-    @Around(value = "idempotentCheckAspect() && @annotation(idempotent)")
-    public Object around(ProceedingJoinPoint point, Idempotent idempotent) throws Throwable {
-        String keyPrefix = idempotent.keyPrefix();
+    @Around(value = "concurrencyLockAspect() && @annotation(concurrencyLock)")
+    public Object around(ProceedingJoinPoint point, ConcurrencyLock concurrencyLock) throws Throwable {
+        String keyPrefix = concurrencyLock.keyPrefix();
         if (StringUtils.isNotBlank(keyPrefix)) {
             Object[] args = point.getArgs();
             User user = (User) args[0];

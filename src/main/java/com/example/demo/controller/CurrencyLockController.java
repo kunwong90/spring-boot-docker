@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.User;
-import com.example.demo.service.IdempotentService;
+import com.example.demo.service.IConcurrencyLockService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +12,10 @@ import java.util.Date;
 
 @RestController
 @RequestMapping
-public class IdempotentController {
+public class CurrencyLockController {
 
     @Resource
-    private IdempotentService idempotentService;
+    private IConcurrencyLockService idempotentService;
 
     @PostMapping(value = "/printUser")
     public User printUser(@RequestBody User user) {

@@ -4,7 +4,7 @@ import com.example.demo.entity.User;
 
 import java.util.Date;
 
-public interface IdempotentService {
+public interface IConcurrencyLockService {
 
     User printUser(User user);
 
