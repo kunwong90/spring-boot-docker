@@ -35,6 +35,7 @@ public class CoreZZCX {
 
     public double[] CountPJ(int lcx) {
         double[] RePJ = new double[2];
+        // 计费里程
         this.jflc = 0;
         double jbpj = 0.0d;
         if (lcx <= 200) {
@@ -124,7 +125,9 @@ public class CoreZZCX {
         double yd;
         double d;
         double d2;
+        // 加快票价
         double JK2 = 0.0d;
+        // 空调票价
         double KT2 = 0.0d;
         PJInfo RET4 = new PJInfo();
         double JBPJ2 = JcJb[0];
@@ -147,6 +150,7 @@ public class CoreZZCX {
                 KT2 = Math.rint(JcJb[1] * 0.25d);
             }
         }
+        // 卧铺 0:硬卧上;1:硬卧中;2:硬卧下;3:软卧上;4:软卧下
         double[] wp2 = new double[5];
         if (distance >= 400) {
             wp2[0] = Math.round(JcJb[1] * 1.1d);
@@ -194,6 +198,7 @@ public class CoreZZCX {
         }
         int ZPJ2 = (int) Math.round(JBPJ + JK + KT);
         int ZPJ_R = (int) Math.round(JBPJ_R2 + JK + KT);
+        // 候车室空调费
         int hckt = distance > 200 ? 1 : 0;
         int ZPJ3 = ZPJ2 + hckt;
         double kcbxf = getNewBxf(this.bxf);
@@ -275,6 +280,7 @@ public class CoreZZCX {
         RET3.setYwz("—");
         RET3.setYwx("—");
         if (plus[2] != 0) {
+            // 硬座票价
             double YZPJ = Double.parseDouble(RET3.getYz());
             RET3.setYws(getNumberFormat().format(wp[0] + YZPJ + 10.0d));
             RET3.setYwz(getNumberFormat().format(wp[1] + YZPJ + 10.0d));
@@ -283,6 +289,7 @@ public class CoreZZCX {
         RET3.setRws("—");
         RET3.setRwx("—");
         if (plus[3] != 0) {
+            // 软座票价
             double RZPJ = Double.parseDouble(RET3.getRz());
             RET3.setRws(getNumberFormat().format(wp[3] + RZPJ + 10.0d));
             RET3.setRwx(getNumberFormat().format(wp[4] + RZPJ + 10.0d));
@@ -596,11 +603,13 @@ public class CoreZZCX {
             } else {
                 String[] TrainRenames2 = iobj.toString().split(",");
                 int RenamesCount2 = TrainRenames2.length;
+                // 出发站所在里程
                 short lc_fz2 = cctkFz.getLc();
                 int j3 = 0;
                 PJInfo mPJInfo3 = mPJInfo2;
                 while (j3 < RenamesCount2) {
                     int idx_dz = Integer.parseInt(TrainRenames2[j3]);
+                    // 到达站所在里程
                     short lc_dz2 = ByteBuffer.wrap(getDataCenter().getCCTK().get(idx_dz)).getShort(i4);
                     if (lc_dz2 > lc_fz2) {
                         SimpleTrainInfo tInfo = coreZZCX.getTraininfo(ccwz2);
