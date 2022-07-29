@@ -1,18 +1,20 @@
 package com.example.demo.entity;
 
 public class TrainPriceQueryVo {
-    private String departureStationName;
+    private String departStationName;
 
     private String destStationName;
 
     private int departureDate;
 
-    public String getDepartureStationName() {
-        return departureStationName;
+    private String trainNo;
+
+    public String getDepartStationName() {
+        return departStationName;
     }
 
-    public void setDepartureStationName(String departureStationName) {
-        this.departureStationName = departureStationName;
+    public void setDepartStationName(String departStationName) {
+        this.departStationName = departStationName;
     }
 
     public String getDestStationName() {
@@ -29,5 +31,13 @@ public class TrainPriceQueryVo {
 
     public void setDepartureDate(int departureDate) {
         this.departureDate = departureDate;
+    }
+
+    public String getTrainNo() {
+        return trainNo;
+    }
+
+    public void setTrainNo(String trainNo) {
+        this.trainNo = trainNo;
     }
 }

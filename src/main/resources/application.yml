@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: ${ENV}
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
 server:
   port: 8080
   tomcat:
@@ -8,3 +13,6 @@ server:
 arthas:
   agent-id: hsehdfsfghhwertyfad
   tunnel-server: ws://192.168.65.128:7777/ws
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
