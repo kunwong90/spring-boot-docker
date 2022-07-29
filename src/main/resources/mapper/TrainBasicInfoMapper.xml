@@ -11,6 +11,23 @@
         <result column="depart_station_name" property="departStationName"/>
         <result column="dest_station_name" property="destStationName"/>
         <result column="distance" property="distance"/>
+        <result column="ydz" property="ydz"/>
+        <result column="edz" property="edz"/>
+        <result column="swz" property="swz"/>
+        <result column="tdz" property="tdz"/>
+        <result column="rz" property="rz"/>
+        <result column="yz" property="yz"/>
+        <result column="gjrws" property="gjrws"/>
+        <result column="gjrwx" property="gjrwx"/>
+        <result column="dws" property="dws"/>
+        <result column="dwx" property="dwx"/>
+        <result column="ydws" property="ydws"/>
+        <result column="ydwx" property="ydwx"/>
+        <result column="edws" property="edws"/>
+        <result column="edwz" property="edwz"/>
+        <result column="edwx" property="edwx"/>
+        <result column="wz" property="wz"/>
+        <result column="qt" property="qt"/>
         <result column="rws" property="rws"/>
         <result column="rwx" property="rwx"/>
         <result column="yws" property="yws"/>
@@ -21,7 +38,7 @@
     </resultMap>
 
     <sql id="columns">
-        id,train_no,start_station_name,end_station_name,depart_station_name,dest_station_name,distance,rws,rwx,yws,ywz,ywx,add_time,update_time
+        id,train_no,start_station_name,end_station_name,depart_station_name,dest_station_name,distance,ydz,edz,swz,tdz,rz,yz,gjrws,gjrwx,dws,dwx,ydws,ydwx,edws,edwz,edwx,wz,qt,rws,rwx,yws,ywz,ywx,add_time,update_time
     </sql>
 
     <select id="selectOne" resultMap="trainBasicInfo" parameterType="com.example.demo.entity.TrainBasicInfo">
@@ -63,6 +80,57 @@
             <if test="distance != null">
                 distance,
             </if>
+            <if test="ydz != null">
+                ydz,
+            </if>
+            <if test="edz != null">
+                edz,
+            </if>
+            <if test="swz != null">
+                swz,
+            </if>
+            <if test="tdz != null">
+                tdz,
+            </if>
+            <if test="rz != null">
+                rz,
+            </if>
+            <if test="yz != null">
+                yz,
+            </if>
+            <if test="gjrws != null">
+                gjrws,
+            </if>
+            <if test="gjrwx != null">
+                gjrwx,
+            </if>
+            <if test="dws != null">
+                dws,
+            </if>
+            <if test="dwx != null">
+                dwx,
+            </if>
+            <if test="ydws != null">
+                ydws,
+            </if>
+            <if test="ydwx != null">
+                ydwx,
+            </if>
+            <if test="edws != null">
+                edws,
+            </if>
+            <if test="edwz != null">
+                edwz,
+            </if>
+            <if test="edwx != null">
+                edwx,
+            </if>
+            <if test="wz != null">
+                wz,
+            </if>
+            <if test="qt != null">
+                qt,
+            </if>
             <if test="rws != null">
                 rws,
             </if>
@@ -103,6 +171,57 @@
             </if>
             <if test="distance != null">
                 #{distance} ,
+            </if>
+            <if test="ydz != null">
+                #{ydz} ,
+            </if>
+            <if test="edz != null">
+                #{edz} ,
+            </if>
+            <if test="swz != null">
+                #{swz} ,
+            </if>
+            <if test="tdz != null">
+                #{tdz} ,
+            </if>
+            <if test="rz != null">
+                #{rz} ,
+            </if>
+            <if test="yz != null">
+                #{yz} ,
+            </if>
+            <if test="gjrws != null">
+                #{gjrws} ,
+            </if>
+            <if test="gjrwx != null">
+                #{gjrwx} ,
+            </if>
+            <if test="dws != null">
+                #{dws} ,
+            </if>
+            <if test="dwx != null">
+                #{dwx} ,
+            </if>
+            <if test="ydws != null">
+                #{ydws} ,
+            </if>
+            <if test="ydwx != null">
+                #{ydwx} ,
+            </if>
+            <if test="edws != null">
+                #{edws} ,
+            </if>
+            <if test="edwz != null">
+                #{edwz} ,
+            </if>
+            <if test="edwx != null">
+                #{edwx} ,
+            </if>
+            <if test="wz != null">
+                #{wz} ,
+            </if>
+            <if test="qt != null">
+                #{qt} ,
             </if>
             <if test="rws != null">
                 #{rws} ,

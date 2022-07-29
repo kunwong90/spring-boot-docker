@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -47,11 +46,45 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                     trainBasicInfo1.setDepartStationName(trainInfo.FZ);
                     trainBasicInfo1.setDestStationName(trainInfo.DZ);
                     trainBasicInfo1.setDistance(trainInfo.LC);
-                    trainBasicInfo1.setRws(new BigDecimal(pjInfo.getRws()));
-                    trainBasicInfo1.setRwx(new BigDecimal(pjInfo.getRwx()));
-                    trainBasicInfo1.setYws(new BigDecimal(pjInfo.getYws()));
-                    trainBasicInfo1.setYwz(new BigDecimal(pjInfo.getYwz()));
-                    trainBasicInfo1.setYwx(new BigDecimal(pjInfo.getYwx()));
+                    trainBasicInfo1.setYdz(pjInfo.getYdz());
+                    trainBasicInfo1.setEdz(pjInfo.getEdz());
+                    trainBasicInfo1.setSwz(pjInfo.getSwz());
+                    trainBasicInfo1.setTdz(pjInfo.getTdz());
+                    trainBasicInfo1.setRz(pjInfo.getRz());
+                    trainBasicInfo1.setYz(pjInfo.getYz());
+                    // 查询不到
+                    trainBasicInfo1.setGjrws(pjInfo.BLANK_PRICE);
+                    // 查询不到
+                    trainBasicInfo1.setGjrwx(pjInfo.BLANK_PRICE);
+                    trainBasicInfo1.setDws(pjInfo.getDw());
+                    trainBasicInfo1.setDwx(pjInfo.BLANK_PRICE);
+                    if (StringUtils.startsWith(trainBasicInfo.getTrainNo(), "D")) {
+                        trainBasicInfo1.setYdws(pjInfo.getRws());
+                        trainBasicInfo1.setYdwx(pjInfo.getRwx());
+                        trainBasicInfo1.setEdws(pjInfo.getYws());
+                        trainBasicInfo1.setEdwz(pjInfo.getYwz());
+                        trainBasicInfo1.setEdwx(pjInfo.getYwx());
+
+                        trainBasicInfo1.setRws(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setRwx(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setYws(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setYwz(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setYwx(pjInfo.BLANK_PRICE);
+                    } else {
+                        trainBasicInfo1.setYdws(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setYdwx(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setEdws(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setEdwz(pjInfo.BLANK_PRICE);
+                        trainBasicInfo1.setEdwx(pjInfo.BLANK_PRICE);
+
+                        trainBasicInfo1.setRws(pjInfo.getRws());
+                        trainBasicInfo1.setRwx(pjInfo.getRwx());
+                        trainBasicInfo1.setYws(pjInfo.getYws());
+                        trainBasicInfo1.setYwz(pjInfo.getYwz());
+                        trainBasicInfo1.setYwx(pjInfo.getYwx());
+                    }
+                    trainBasicInfo1.setWz(pjInfo.getWz());
+                    trainBasicInfo1.setQt(pjInfo.getQt());
                     trainBasicInfo1.setAddTime(new Date());
                     trainBasicInfo1.setUpdateTime(new Date());
                     trainBasicInfoMapper.insert(trainBasicInfo1);

@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class TrainBasicInfo {
@@ -17,20 +16,117 @@ public class TrainBasicInfo {
 
     private Integer distance;
 
-    private BigDecimal rws;
+    /**
+     * 一等座
+     */
+    private String ydz;
 
-    private BigDecimal rwx;
+    /**
+     * 二等座
+     */
+    private String edz;
 
-    private BigDecimal yws;
+    /**
+     * 商务座
+     */
+    private String swz;
 
-    private BigDecimal ywz;
+    /**
+     * 特等座
+     */
+    private String tdz;
 
-    private BigDecimal ywx;
+    /**
+     * 软座
+     */
+    private String rz;
+
+    /**
+     * 硬座
+     */
+    private String yz;
+
+    /**
+     * 高级软卧上
+     */
+    private String gjrws;
+
+    /**
+     * 高级软卧下
+     */
+    private String gjrwx;
+
+    /**
+     * 动卧上
+     */
+    private String dws;
+
+    /**
+     * 动卧下
+     */
+    private String dwx;
+
+    /**
+     * 一等卧上
+     */
+    private String ydws;
+
+    /**
+     * 一等卧下
+     */
+
+    private String ydwx;
+
+    /**
+     * 二等卧上
+     */
+    private String edws;
+    /**
+     * 二等卧中
+     */
+    private String edwz;
+    /**
+     * 二等卧下
+     */
+    private String edwx;
+
+    /**
+     * 无座
+     */
+    private String wz;
+
+    /**
+     * 其他
+     */
+    private String qt;
+
+    /**
+     * 软卧上
+     */
+    private String rws;
+
+    /**
+     * 软卧下
+     */
+    private String rwx;
+
+    /**
+     * 硬卧上
+     */
+    private String yws;
+    /**
+     * 硬卧中
+     */
+    private String ywz;
+
+    /**
+     * 硬卧下
+     */
+    private String ywx;
 
     private Date addTime;
 
     private Date updateTime;
-
 
     public Long getId() {
         return id;
@@ -88,43 +184,179 @@ public class TrainBasicInfo {
         this.distance = distance;
     }
 
-    public BigDecimal getRws() {
+    public String getYdz() {
+        return ydz;
+    }
+
+    public void setYdz(String ydz) {
+        this.ydz = ydz;
+    }
+
+    public String getEdz() {
+        return edz;
+    }
+
+    public void setEdz(String edz) {
+        this.edz = edz;
+    }
+
+    public String getSwz() {
+        return swz;
+    }
+
+    public void setSwz(String swz) {
+        this.swz = swz;
+    }
+
+    public String getTdz() {
+        return tdz;
+    }
+
+    public void setTdz(String tdz) {
+        this.tdz = tdz;
+    }
+
+    public String getRz() {
+        return rz;
+    }
+
+    public void setRz(String rz) {
+        this.rz = rz;
+    }
+
+    public String getYz() {
+        return yz;
+    }
+
+    public void setYz(String yz) {
+        this.yz = yz;
+    }
+
+    public String getGjrws() {
+        return gjrws;
+    }
+
+    public void setGjrws(String gjrws) {
+        this.gjrws = gjrws;
+    }
+
+    public String getGjrwx() {
+        return gjrwx;
+    }
+
+    public void setGjrwx(String gjrwx) {
+        this.gjrwx = gjrwx;
+    }
+
+    public String getDws() {
+        return dws;
+    }
+
+    public void setDws(String dws) {
+        this.dws = dws;
+    }
+
+    public String getDwx() {
+        return dwx;
+    }
+
+    public void setDwx(String dwx) {
+        this.dwx = dwx;
+    }
+
+    public String getYdws() {
+        return ydws;
+    }
+
+    public void setYdws(String ydws) {
+        this.ydws = ydws;
+    }
+
+    public String getYdwx() {
+        return ydwx;
+    }
+
+    public void setYdwx(String ydwx) {
+        this.ydwx = ydwx;
+    }
+
+    public String getEdws() {
+        return edws;
+    }
+
+    public void setEdws(String edws) {
+        this.edws = edws;
+    }
+
+    public String getEdwz() {
+        return edwz;
+    }
+
+    public void setEdwz(String edwz) {
+        this.edwz = edwz;
+    }
+
+    public String getEdwx() {
+        return edwx;
+    }
+
+    public void setEdwx(String edwx) {
+        this.edwx = edwx;
+    }
+
+    public String getWz() {
+        return wz;
+    }
+
+    public void setWz(String wz) {
+        this.wz = wz;
+    }
+
+    public String getQt() {
+        return qt;
+    }
+
+    public void setQt(String qt) {
+        this.qt = qt;
+    }
+
+    public String getRws() {
         return rws;
     }
 
-    public void setRws(BigDecimal rws) {
+    public void setRws(String rws) {
         this.rws = rws;
     }
 
-    public BigDecimal getRwx() {
+    public String getRwx() {
         return rwx;
     }
 
-    public void setRwx(BigDecimal rwx) {
+    public void setRwx(String rwx) {
         this.rwx = rwx;
     }
 
-    public BigDecimal getYws() {
+    public String getYws() {
         return yws;
     }
 
-    public void setYws(BigDecimal yws) {
+    public void setYws(String yws) {
         this.yws = yws;
     }
 
-    public BigDecimal getYwz() {
+    public String getYwz() {
         return ywz;
     }
 
-    public void setYwz(BigDecimal ywz) {
+    public void setYwz(String ywz) {
         this.ywz = ywz;
     }
 
-    public BigDecimal getYwx() {
+    public String getYwx() {
         return ywx;
     }
 
-    public void setYwx(BigDecimal ywx) {
+    public void setYwx(String ywx) {
         this.ywx = ywx;
     }
 
