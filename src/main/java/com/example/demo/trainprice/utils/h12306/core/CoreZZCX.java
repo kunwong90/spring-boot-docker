@@ -447,29 +447,29 @@ public class CoreZZCX {
     public SimpleTrainInfo getTraininfo(int Pos) {
         ByteBuffer btsBuffer = ByteBuffer.wrap(getDataCenter().getCCData().get(Pos));
         SimpleTrainInfo trainInfo = new SimpleTrainInfo();
-        trainInfo.trainName = getDataCenter().getCC().get(Pos);
-        trainInfo.trainDJ = btsBuffer.get();
-        trainInfo.trainSF = btsBuffer.get();
-        trainInfo.trainInCCTKSYs = btsBuffer.getInt();
-        trainInfo.trainInCCTKSYe = btsBuffer.getInt();
-        trainInfo.trainSFKT = btsBuffer.get() + (-48) == 1;
-        trainInfo.trainXW = String.format("%04d", btsBuffer.getShort());
-        trainInfo.trainBJ = btsBuffer.get() - 48;
-        trainInfo.trainKXZQ = btsBuffer.get();
-        trainInfo.trainKXGL = btsBuffer.getInt();
-        trainInfo.trainKSRQ = btsBuffer.getInt();
-        trainInfo.trainJSRQ = btsBuffer.getInt();
-        trainInfo.noticeStart = btsBuffer.getInt();
-        trainInfo.noticeEnd = btsBuffer.getInt();
+        trainInfo.setTrainName(getDataCenter().getCC().get(Pos));
+        trainInfo.setTrainDJ(btsBuffer.get());
+        trainInfo.setTrainSf(btsBuffer.get());
+        trainInfo.setTrainInCCTKSYs(btsBuffer.getInt());
+        trainInfo.setTrainInCCTKSYe(btsBuffer.getInt());
+        trainInfo.setTrainSfkt(btsBuffer.get() + (-48) == 1);
+        trainInfo.setTrainXw(String.format("%04d", btsBuffer.getShort()));
+        trainInfo.setTrainBJ(btsBuffer.get() - 48);
+        trainInfo.setTrainKxzq(btsBuffer.get());
+        trainInfo.setTrainKxgl(btsBuffer.getInt());
+        trainInfo.setTrainKsrq(btsBuffer.getInt());
+        trainInfo.setTrainJsrq(btsBuffer.getInt());
+        trainInfo.setNoticeStart(btsBuffer.getInt());
+        trainInfo.setNoticeEnd(btsBuffer.getInt());
         // 数据来源 000_ddj.json
-        trainInfo.ddj = ((char) btsBuffer.get()) + "" + ((char) btsBuffer.get()) + "" + ((char) btsBuffer.get());
-        trainInfo.hcStart = btsBuffer.getInt();
-        trainInfo.hcEnd = btsBuffer.getInt();
-        trainInfo.pjdmStart = btsBuffer.getInt();
-        trainInfo.pjdmEnd = btsBuffer.getInt();
-        trainInfo.caceStart = btsBuffer.getInt();
-        trainInfo.caceEnd = btsBuffer.getInt();
-        trainInfo.id = Pos;
+        trainInfo.setDdj(((char) btsBuffer.get()) + "" + ((char) btsBuffer.get()) + "" + ((char) btsBuffer.get()));
+        trainInfo.setHcStart(btsBuffer.getInt());
+        trainInfo.setHcEnd(btsBuffer.getInt());
+        trainInfo.setPjdmStart(btsBuffer.getInt());
+        trainInfo.setPjdmEnd(btsBuffer.getInt());
+        trainInfo.setCaceStart(btsBuffer.getInt());
+        trainInfo.setCaceEnd(btsBuffer.getInt());
+        trainInfo.setId(Pos);
         return trainInfo;
     }
 
@@ -511,46 +511,46 @@ public class CoreZZCX {
         return (!sfkt || dj.equals("动车组") || dj.equals("城际高速") || dj.equals("高速动车") || dj.equals("市郊列车")) ? dj : "新空" + dj;
     }
 
-    public TrainInfo getxInfo(int CCID, String fullTrainName, String RealTrainName, PJInfo pj, short[] Bds, String[] Rds, CCTKBlock Sclp, CCTKBlock Eclp, String dj, int Lc, String[] sfzd, int kxzq, int kxgl, int ksrq, int jsrq, String RcdId, int noticeStart, int noticeEnd, String ddj, int hcStart, int hcEnd, int trainBJ, int caceStart, int caceEnd, SimpleTrainInfo simpleTrainInfo) {
+    public TrainInfo getxInfo(int CCID, String fullTrainName, String realTrainName, PJInfo pj, short[] Bds, String[] Rds, CCTKBlock Sclp, CCTKBlock Eclp, String dj, int Lc, String[] sfzd, int kxzq, int kxgl, int ksrq, int jsrq, String RcdId, int noticeStart, int noticeEnd, String ddj, int hcStart, int hcEnd, int trainBJ, int caceStart, int caceEnd, SimpleTrainInfo simpleTrainInfo) {
         TrainInfo trainInfo = new TrainInfo();
-        trainInfo.fullTrainNo = fullTrainName;
-        trainInfo.CC = RealTrainName.trim();
-        trainInfo.DJ = dj.trim();
-        trainInfo.DD = toTime(Sclp.getDd());
-        trainInfo.KD = toTime(Sclp.getKd());
-        trainInfo.DD1 = toTime(Eclp.getDd());
-        trainInfo.LC = Lc;
-        trainInfo.FZ = Rds[0].trim();
-        trainInfo.DZ = Rds[1].trim();
-        trainInfo.SFZ = sfzd[0].trim();
-        trainInfo.ZDZ = sfzd[1].trim();
-        trainInfo.LS = Common.covert2StringTime(Common.getMinites(Eclp.getDd(), Eclp.getKd(), Sclp.getKd(), Eclp.getDay() - Sclp.getDay()));
-        trainInfo.PJ = pj;
-        trainInfo.kxzq = kxzq;
-        trainInfo.kxgl = kxgl;
-        trainInfo.ksrq = ksrq;
-        trainInfo.yxts = Sclp.getDay() - 48;
-        trainInfo.jsrq = jsrq;
-        trainInfo.ID = RcdId;
-        trainInfo.CCID = CCID;
-        trainInfo.fzCCTKBlock = Sclp;
-        trainInfo.dzCCTKBlock = Eclp;
-        trainInfo.noticeStart = noticeStart;
-        trainInfo.noticeEnd = noticeEnd;
-        trainInfo.DDJ = String.valueOf(ddj);
-        trainInfo.hcStart = hcStart;
-        trainInfo.hcEnd = hcEnd;
-        trainInfo.trainBJ = trainBJ;
-        trainInfo.caceStart = caceStart;
-        trainInfo.caceEnd = caceEnd;
+        trainInfo.setFullTrainNo(fullTrainName);
+        trainInfo.setCc(realTrainName.trim());
+        trainInfo.setDj(dj.trim());
+        trainInfo.setDd(toTime(Sclp.getDd()));
+        trainInfo.setKd(toTime(Sclp.getKd()));
+        trainInfo.setDd1(toTime(Eclp.getDd()));
+        trainInfo.setLc(Lc);
+        trainInfo.setFz(Rds[0].trim());
+        trainInfo.setDz(Rds[1].trim());
+        trainInfo.setSfz(sfzd[0].trim());
+        trainInfo.setZdz(sfzd[1].trim());
+        trainInfo.setLs(Common.covert2StringTime(Common.getMinites(Eclp.getDd(), Eclp.getKd(), Sclp.getKd(), Eclp.getDay() - Sclp.getDay())));
+        trainInfo.setPj(pj);
+        trainInfo.setKxzq(kxzq);
+        trainInfo.setKxgl(kxgl);
+        trainInfo.setKsrq(ksrq);
+        trainInfo.setYxts(Sclp.getDay() - 48);
+        trainInfo.setJsrq(jsrq);
+        trainInfo.setId(RcdId);
+        trainInfo.setCcId(CCID);
+        trainInfo.setFzCCTKBlock(Sclp);
+        trainInfo.setDzCCTKBlock(Eclp);
+        trainInfo.setNoticeStart(noticeStart);
+        trainInfo.setNoticeEnd(noticeEnd);
+        trainInfo.setDdj(String.valueOf(ddj));
+        trainInfo.setHcStart(hcStart);
+        trainInfo.setHcEnd(hcEnd);
+        trainInfo.setTrainBJ(trainBJ);
+        trainInfo.setCaceStart(caceStart);
+        trainInfo.setCaceEnd(caceEnd);
         NoticeBlock noticeBlock = new NoticeBlock();
-        noticeBlock.setKsrq(trainInfo.ksrq);
-        noticeBlock.setJsrq(trainInfo.jsrq);
-        noticeBlock.setKxgl(trainInfo.kxgl);
-        noticeBlock.setKxzq((byte) trainInfo.kxzq);
-        noticeBlock.setDay((byte) trainInfo.yxts);
-        trainInfo.noticeBlock = noticeBlock;
-        trainInfo.setBasicYunXingInfo(new YunXingInfo(simpleTrainInfo.trainKXZQ, simpleTrainInfo.trainKXGL, simpleTrainInfo.trainKSRQ, simpleTrainInfo.trainJSRQ));
+        noticeBlock.setKsrq(trainInfo.getKsrq());
+        noticeBlock.setJsrq(trainInfo.getJsrq());
+        noticeBlock.setKxgl(trainInfo.getKxgl());
+        noticeBlock.setKxzq((byte) trainInfo.getKxzq());
+        noticeBlock.setDay((byte) trainInfo.getYxts());
+        trainInfo.setNoticeBlock(noticeBlock);
+        trainInfo.setBasicYunXingInfo(new YunXingInfo(simpleTrainInfo.getTrainKxzq(), simpleTrainInfo.getTrainKxgl(), simpleTrainInfo.getTrainKsrq(), simpleTrainInfo.getTrainJsrq()));
         return trainInfo;
     }
 
@@ -616,10 +616,10 @@ public class CoreZZCX {
                         int j4 = j3;
                         int RenamesCount3 = RenamesCount2;
                         CCTKBlock cctkDz = new CCTKBlock(getDataCenter().getCCTK().get(idx_dz));
-                        String[] SfZd = coreZZCX.getTrainSEinfo(tInfo.trainInCCTKSYs, tInfo.trainInCCTKSYe);
-                        String dj = coreZZCX.lcdj(tInfo.trainDJ, tInfo.trainSFKT);
+                        String[] SfZd = coreZZCX.getTrainSEinfo(tInfo.getTrainInCCTKSYs(), tInfo.getTrainInCCTKSYe());
+                        String dj = coreZZCX.lcdj(tInfo.getTrainDJ(), tInfo.isTrainSfkt());
                         int Lc2 = lc_dz2 - lc_fz2;
-                        if (tInfo.trainBJ == 1) {
+                        if (tInfo.getTrainBJ() == 1) {
                             double[] JcJb = coreZZCX.CountPJ(Lc2);
                             cxResult3 = cxResult4;
                             j2 = j4;
@@ -630,7 +630,7 @@ public class CoreZZCX {
                             lc_dz = ccwz2;
                             Re23 = Re24;
                             i3 = i5;
-                            mPJInfo = CountSJPJ(tInfo.trainDJ, tInfo.trainSF, tInfo.trainSFKT, JcJb, Lc, tInfo.trainXW);
+                            mPJInfo = CountSJPJ(tInfo.getTrainDJ(), tInfo.getTrainSf(), tInfo.isTrainSfkt(), JcJb, Lc, tInfo.getTrainXw());
                             Rds2 = Rds3;
                         } else {
                             lc_fz = lc_fz2;
@@ -642,9 +642,9 @@ public class CoreZZCX {
                             RenamesCount = RenamesCount3;
                             lc_dz = ccwz2;
                             i3 = i5;
-                            if (tInfo.pjdmStart != 99999) {
+                            if (tInfo.getPjdmStart() != 99999) {
                                 Rds2 = Rds3;
-                                mPJInfo = getPrice(tInfo.trainName, cctkFz.getZmwz(), cctkDz.getZmwz(), tInfo.pjdmStart, tInfo.pjdmEnd, getRq(), cctkFz.getDay() - 48);
+                                mPJInfo = getPrice(tInfo.getTrainName(), cctkFz.getZmwz(), cctkDz.getZmwz(), tInfo.getPjdmStart(), tInfo.getPjdmEnd(), getRq(), cctkFz.getDay() - 48);
                             } else {
                                 Rds2 = Rds3;
                                 mPJInfo = coreZZCX.getPrice(cctkFz.getZmwz(), cctkDz.getZmwz(), lc_dz);
@@ -657,9 +657,9 @@ public class CoreZZCX {
                         }
                         int s2 = cctkFz.getCzcc();
                         int posinfull = s2 - 48;
-                        int sStartTo4 = tInfo.id;
-                        String str = tInfo.trainName;
-                        String str2 = tInfo.trainName;
+                        int sStartTo4 = tInfo.getId();
+                        String str = tInfo.getTrainName();
+                        String str2 = tInfo.getTrainName();
                         if (posinfull != 0) {
                             str2 = str2.split("/")[posinfull - 1];
                         }
@@ -671,7 +671,7 @@ public class CoreZZCX {
                         ccwz = lc_dz;
                         j = j2;
                         cxResult2 = cxResult3;
-                        cxResult2.add(getxInfo(sStartTo4, str, str3, mPJInfo, Bds2, Rds2, cctkFz, cctkDz, dj, Lc, SfZd, tInfo.trainKXZQ, tInfo.trainKXGL, tInfo.trainKSRQ, tInfo.trainJSRQ, i3 + "-" + j2, tInfo.noticeStart, tInfo.noticeEnd, tInfo.ddj, tInfo.hcStart, tInfo.hcEnd, tInfo.trainBJ, tInfo.caceStart, tInfo.caceEnd, tInfo));
+                        cxResult2.add(getxInfo(sStartTo4, str, str3, mPJInfo, Bds2, Rds2, cctkFz, cctkDz, dj, Lc, SfZd, tInfo.getTrainKxzq(), tInfo.getTrainKxgl(), tInfo.getTrainKsrq(), tInfo.getTrainJsrq(), i3 + "-" + j2, tInfo.getNoticeStart(), tInfo.getNoticeEnd(), tInfo.getDdj(), tInfo.getHcStart(), tInfo.getHcEnd(), tInfo.getTrainBJ(), tInfo.getCaceStart(), tInfo.getCaceEnd(), tInfo));
                         mPJInfo3 = mPJInfo;
                     } else {
                         j = j3;
@@ -826,20 +826,20 @@ public class CoreZZCX {
             short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
             boolean beginToadd = false;
             SimpleTrainInfo trainInfo = getTraininfo(ccwz);
-            for (int j = trainInfo.trainInCCTKSYs; j <= trainInfo.trainInCCTKSYe; j++) {
+            for (int j = trainInfo.getTrainInCCTKSYs(); j <= trainInfo.getTrainInCCTKSYe(); j++) {
                 short zmIdx = GetZMbyCC_zmhzsyPos(j);
                 if (afterStations) {
                     if (beginToadd) {
-                        hSet.add(Short.valueOf(zmIdx));
+                        hSet.add(zmIdx);
                     }
-                    if (stationIdxs.contains(Short.valueOf(zmIdx))) {
+                    if (stationIdxs.contains(zmIdx)) {
                         beginToadd = true;
                     }
                 } else {
                     if (!beginToadd) {
-                        hSet.add(Short.valueOf(zmIdx));
+                        hSet.add(zmIdx);
                     }
-                    if (stationIdxs.contains(Short.valueOf(zmIdx))) {
+                    if (stationIdxs.contains(zmIdx)) {
                         beginToadd = true;
                     }
                 }

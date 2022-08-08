@@ -36,16 +36,16 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
             List<TrainInfo> trainInfoList = coreZZCX.query(trainBasicInfo.getDepartStationName(), trainBasicInfo.getDestStationName(), Integer.parseInt(date));
             System.out.println("查询耗时 = " + (System.currentTimeMillis() - start));
             for (TrainInfo trainInfo : trainInfoList) {
-                if (StringUtils.equals(trainBasicInfo.getDepartStationName(), trainInfo.FZ) && StringUtils.equals(trainBasicInfo.getDestStationName(), trainInfo.DZ)
-                        && StringUtils.equals(trainBasicInfo.getTrainNo(), trainInfo.CC)) {
-                    PJInfo pjInfo = trainInfo.PJ;
+                if (StringUtils.equals(trainBasicInfo.getDepartStationName(), trainInfo.getFz()) && StringUtils.equals(trainBasicInfo.getDestStationName(), trainInfo.getDz())
+                        && StringUtils.equals(trainBasicInfo.getTrainNo(), trainInfo.getCc())) {
+                    PJInfo pjInfo = trainInfo.getPj();
                     trainBasicInfo1 = new TrainBasicInfo();
                     trainBasicInfo1.setTrainNo(trainBasicInfo.getTrainNo());
-                    trainBasicInfo1.setStartStationName(trainInfo.SFZ);
-                    trainBasicInfo1.setEndStationName(trainInfo.ZDZ);
-                    trainBasicInfo1.setDepartStationName(trainInfo.FZ);
-                    trainBasicInfo1.setDestStationName(trainInfo.DZ);
-                    trainBasicInfo1.setDistance(trainInfo.LC);
+                    trainBasicInfo1.setStartStationName(trainInfo.getSfz());
+                    trainBasicInfo1.setEndStationName(trainInfo.getZdz());
+                    trainBasicInfo1.setDepartStationName(trainInfo.getFz());
+                    trainBasicInfo1.setDestStationName(trainInfo.getDz());
+                    trainBasicInfo1.setDistance(trainInfo.getLc());
                     trainBasicInfo1.setYdz(pjInfo.getYdz());
                     trainBasicInfo1.setEdz(pjInfo.getEdz());
                     trainBasicInfo1.setSwz(pjInfo.getSwz());

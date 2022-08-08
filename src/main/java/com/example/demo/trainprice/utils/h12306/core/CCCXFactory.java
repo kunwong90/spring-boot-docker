@@ -182,8 +182,8 @@ public class CCCXFactory {
                 if (c > 0) {
                     int pos = c - 'A';
                     SimpleTrainInfo CCinfo = getCoreZZCX().getTraininfo(CCps.get(i2).getList().get(pos));
-                    int from = CCinfo.trainInCCTKSYs;
-                    int to = CCinfo.trainInCCTKSYe;
+                    int from = CCinfo.getTrainInCCTKSYs();
+                    int to = CCinfo.getTrainInCCTKSYe();
                     ArrayList<CCItem> alCCItem = CCtolst(from, to);
                     this.myCCdetails.add(alCCItem);
                     this.myCClist.add(CSimpleTrainInfo(CCinfo, alCCItem.get(i), alCCItem.get(alCCItem.size() - 1)));
@@ -193,8 +193,8 @@ public class CCCXFactory {
                     int j = 0;
                     while (j < listSize) {
                         SimpleTrainInfo CCinfo2 = getCoreZZCX().getTraininfo(CCps.get(i2).getList().get(j));
-                        int from2 = CCinfo2.trainInCCTKSYs;
-                        int to2 = CCinfo2.trainInCCTKSYe;
+                        int from2 = CCinfo2.getTrainInCCTKSYs();
+                        int to2 = CCinfo2.getTrainInCCTKSYe();
                         ArrayList<CCItem> alCCItem2 = CCtolst(from2, to2);
                         this.myCCdetails.add(alCCItem2);
                         ArrayList<TrainInfo> arrayList = this.myCClist;
@@ -218,53 +218,53 @@ public class CCCXFactory {
     private TrainInfo CSimpleTrainInfo(SimpleTrainInfo train, CCItem firstCCItem, CCItem lastCCItem) {
         PJInfo mPJInfo;
         TrainInfo simpleTrainInfo = new TrainInfo();
-        simpleTrainInfo.CC = train.trainName;
-        simpleTrainInfo.fullTrainNo = train.trainName;
-        simpleTrainInfo.DJ = getCoreZZCX().lcdj(train.trainDJ, train.trainSFKT);
-        simpleTrainInfo.SFKT = train.trainSFKT ? 1 : 0;
-        simpleTrainInfo.FZ = firstCCItem.ZM;
-        simpleTrainInfo.DZ = lastCCItem.ZM;
-        simpleTrainInfo.SFZ = firstCCItem.ZM;
-        simpleTrainInfo.ZDZ = lastCCItem.ZM;
-        simpleTrainInfo.KD = Common.toTime(firstCCItem.KD);
-        simpleTrainInfo.DD = Common.toTime(lastCCItem.DD);
-        simpleTrainInfo.DD1 = Common.toTime(lastCCItem.DD);
-        simpleTrainInfo.LC = lastCCItem.LC;
+        simpleTrainInfo.setCc(train.getTrainName());
+        simpleTrainInfo.setFullTrainNo(train.getTrainName());
+        simpleTrainInfo.setDj(getCoreZZCX().lcdj(train.getTrainDJ(), train.isTrainSfkt()));
+        simpleTrainInfo.setSfkt(train.isTrainSfkt() ? 1 : 0);
+        simpleTrainInfo.setFz(firstCCItem.ZM);
+        simpleTrainInfo.setDz(lastCCItem.ZM);
+        simpleTrainInfo.setSfz(firstCCItem.ZM);
+        simpleTrainInfo.setZdz(lastCCItem.ZM);
+        simpleTrainInfo.setKd(Common.toTime(firstCCItem.KD));
+        simpleTrainInfo.setDd(Common.toTime(lastCCItem.DD));
+        simpleTrainInfo.setDd1(Common.toTime(lastCCItem.DD));
+        simpleTrainInfo.setLc(lastCCItem.LC);
         int fzs = Common.getMinites(lastCCItem.DD, lastCCItem.KD, firstCCItem.KD, lastCCItem.TS - firstCCItem.TS);
-        simpleTrainInfo.LS = Common.covert2StringTime(fzs);
-        if (train.trainBJ == 1) {
+        simpleTrainInfo.setLs(Common.covert2StringTime(fzs));
+        if (train.getTrainBJ() == 1) {
             getCoreZZCX().resetNessaryVariable();
-            double[] JcJb = getCoreZZCX().CountPJ(simpleTrainInfo.LC);
-            mPJInfo = getCoreZZCX().CountSJPJ(train.trainDJ, train.trainSF, train.trainSFKT, JcJb, simpleTrainInfo.LC, train.trainXW);
+            double[] JcJb = getCoreZZCX().CountPJ(simpleTrainInfo.getLc());
+            mPJInfo = getCoreZZCX().CountSJPJ(train.getTrainDJ(), train.getTrainSf(), train.isTrainSfkt(), JcJb, simpleTrainInfo.getLc(), train.getTrainXw());
         } else {
             int fzZmwz = Integer.parseInt(String.valueOf(firstCCItem.Ext2));
             int dzZmwz = Integer.parseInt(String.valueOf(lastCCItem.Ext2));
-            mPJInfo = train.pjdmStart != 99999 ? getCoreZZCX().getPrice(train.trainName, fzZmwz, dzZmwz, train.pjdmStart, train.pjdmEnd, getRq(), firstCCItem.TS) : getCoreZZCX().getPrice(fzZmwz, dzZmwz, firstCCItem.ccwz);
+            mPJInfo = train.getPjdmStart() != 99999 ? getCoreZZCX().getPrice(train.getTrainName(), fzZmwz, dzZmwz, train.getPjdmStart(), train.getPjdmEnd(), getRq(), firstCCItem.TS) : getCoreZZCX().getPrice(fzZmwz, dzZmwz, firstCCItem.ccwz);
         }
-        simpleTrainInfo.PJ = mPJInfo;
-        simpleTrainInfo.ksrq = train.trainKSRQ;
-        simpleTrainInfo.jsrq = train.trainJSRQ;
-        simpleTrainInfo.kxzq = train.trainKXZQ;
-        simpleTrainInfo.kxgl = train.trainKXGL;
-        simpleTrainInfo.yxts = 0;
-        simpleTrainInfo.fzCCTKBlock = new CCTKBlock(getDataCenter().getCCTK().get(firstCCItem.cctkWz));
-        simpleTrainInfo.dzCCTKBlock = new CCTKBlock(getDataCenter().getCCTK().get(lastCCItem.cctkWz));
-        simpleTrainInfo.noticeStart = train.noticeStart;
-        simpleTrainInfo.noticeEnd = train.noticeEnd;
-        simpleTrainInfo.DDJ = String.valueOf(train.ddj);
-        simpleTrainInfo.trainBJ = train.trainBJ;
-        simpleTrainInfo.hcStart = train.hcStart;
-        simpleTrainInfo.hcEnd = train.hcEnd;
-        simpleTrainInfo.caceStart = train.caceStart;
-        simpleTrainInfo.caceEnd = train.caceEnd;
+        simpleTrainInfo.setPj(mPJInfo);
+        simpleTrainInfo.setKsrq(train.getTrainKsrq());
+        simpleTrainInfo.setJsrq(train.getTrainJsrq());
+        simpleTrainInfo.setKxzq(train.getTrainKxzq());
+        simpleTrainInfo.setKxgl(train.getTrainKxgl());
+        simpleTrainInfo.setYxts(0);
+        simpleTrainInfo.setFzCCTKBlock(new CCTKBlock(getDataCenter().getCCTK().get(firstCCItem.cctkWz)));
+        simpleTrainInfo.setDzCCTKBlock(new CCTKBlock(getDataCenter().getCCTK().get(lastCCItem.cctkWz)));
+        simpleTrainInfo.setNoticeStart(train.getNoticeStart());
+        simpleTrainInfo.setNoticeEnd(train.getNoticeEnd());
+        simpleTrainInfo.setDdj(String.valueOf(train.getDdj()));
+        simpleTrainInfo.setTrainBJ(train.getTrainBJ());
+        simpleTrainInfo.setHcStart(train.getHcStart());
+        simpleTrainInfo.setHcEnd(train.getHcEnd());
+        simpleTrainInfo.setCaceStart(train.getCaceStart());
+        simpleTrainInfo.setCaceEnd(train.getCaceEnd());
         NoticeBlock noticeBlock = new NoticeBlock();
-        noticeBlock.setKsrq(simpleTrainInfo.ksrq);
-        noticeBlock.setJsrq(simpleTrainInfo.jsrq);
-        noticeBlock.setKxgl(simpleTrainInfo.kxgl);
-        noticeBlock.setKxzq((byte) simpleTrainInfo.kxzq);
-        noticeBlock.setDay((byte) simpleTrainInfo.yxts);
-        simpleTrainInfo.noticeBlock = noticeBlock;
-        simpleTrainInfo.setBasicYunXingInfo(new YunXingInfo(train.trainKXZQ, train.trainKXGL, train.trainKSRQ, train.trainJSRQ));
+        noticeBlock.setKsrq(simpleTrainInfo.getKsrq());
+        noticeBlock.setJsrq(simpleTrainInfo.getJsrq());
+        noticeBlock.setKxgl(simpleTrainInfo.getKxgl());
+        noticeBlock.setKxzq((byte) simpleTrainInfo.getKxzq());
+        noticeBlock.setDay((byte) simpleTrainInfo.getYxts());
+        simpleTrainInfo.setNoticeBlock(noticeBlock);
+        simpleTrainInfo.setBasicYunXingInfo(new YunXingInfo(train.getTrainKxzq(), train.getTrainKxgl(), train.getTrainKsrq(), train.getTrainJsrq()));
         return simpleTrainInfo;
     }
 
