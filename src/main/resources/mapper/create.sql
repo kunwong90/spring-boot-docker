@@ -5,6 +5,7 @@ start_station_name VARCHAR(20) NOT NULL COMMENT '始发站',
 end_station_name VARCHAR(20) NOT NULL COMMENT '终点站',
 depart_station_name VARCHAR(20) NOT NULL COMMENT '出发站',
 dest_station_name VARCHAR(20) NOT NULL COMMENT '目的站',
+departure_date date not null COMMENT '出发日期',
 distance INT(10) NOT NULL COMMENT '距离',
 ydz VARCHAR(10) NOT NULL COMMENT '一等座价格',
 edz VARCHAR(10) NOT NULL COMMENT '二等座价格',
@@ -30,5 +31,5 @@ ywz VARCHAR(10) NOT NULL COMMENT '硬卧中铺价格',
 ywx VARCHAR(10) NOT NULL COMMENT '硬卧下铺价格',
 add_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
 update_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-INDEX idx_train_no_depart_station_name_dest_station_name (train_no,depart_station_name,dest_station_name)
+INDEX idx_train_no_depart_station_name_dest_station_name_date (train_no,depart_station_name,dest_station_name,departure_date)
 );

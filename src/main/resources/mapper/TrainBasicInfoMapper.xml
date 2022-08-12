@@ -10,6 +10,7 @@
         <result column="end_station_name" property="endStationName"/>
         <result column="depart_station_name" property="departStationName"/>
         <result column="dest_station_name" property="destStationName"/>
+        <result column="departure_date" property="departureDate"/>
         <result column="distance" property="distance"/>
         <result column="ydz" property="ydz"/>
         <result column="edz" property="edz"/>
@@ -55,6 +56,9 @@
             <if test="destStationName != null">
                 and dest_station_name = #{destStationName}
             </if>
+            <if test="departureDate != null">
+                and departure_date = #{departureDate}
+            </if>
         </where>
         limit 1
     </select>
@@ -76,6 +80,9 @@
             </if>
             <if test="destStationName != null">
                 dest_station_name,
+            </if>
+            <if test="departureDate != null" >
+                departure_date,
             </if>
             <if test="distance != null">
                 distance,
@@ -168,6 +175,9 @@
             </if>
             <if test="destStationName != null">
                 #{destStationName} ,
+            </if>
+            <if test="departureDate != null" >
+                #{departureDate},
             </if>
             <if test="distance != null">
                 #{distance} ,

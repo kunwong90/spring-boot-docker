@@ -5,4 +5,6 @@ import com.example.demo.entity.TrainBasicInfo;
 public interface ITrainBasicInfoService {
 
     TrainBasicInfo selectOne(TrainBasicInfo trainBasicInfo);
+
+    void queryAndSave(TrainBasicInfo trainBasicInfo);
 }

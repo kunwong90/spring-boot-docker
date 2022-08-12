@@ -14,6 +14,8 @@ public class TrainBasicInfo {
 
     private String destStationName;
 
+    private Date departureDate;
+
     private Integer distance;
 
     /**
@@ -174,6 +176,14 @@ public class TrainBasicInfo {
 
     public void setDestStationName(String destStationName) {
         this.destStationName = destStationName;
+    }
+
+    public Date getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(Date departureDate) {
+        this.departureDate = departureDate;
     }
 
     public Integer getDistance() {
