@@ -81,7 +81,7 @@
             <if test="destStationName != null">
                 dest_station_name,
             </if>
-            <if test="departureDate != null" >
+            <if test="departureDate != null">
                 departure_date,
             </if>
             <if test="distance != null">
@@ -176,7 +176,7 @@
             <if test="destStationName != null">
                 #{destStationName} ,
             </if>
-            <if test="departureDate != null" >
+            <if test="departureDate != null">
                 #{departureDate},
             </if>
             <if test="distance != null">
@@ -255,6 +255,23 @@
                 #{updateTime} ,
             </if>
         </trim>
+    </insert>
+
+
+    <insert id="batchInsert" parameterType="com.example.demo.entity.TrainBasicInfo">
+        insert into train_basic_info
+        (rain_no , start_station_name , end_station_name , depart_station_name , dest_station_name, departure_date,
+        distance, ydz, edz, swz, tdz, rz, yz, gjrws, gjrwx, dws, dwx, ydws, ydwx, edws, edwz, edwx, wz, qt, rws, rwx,
+        yws, ywz, ywx, add_time, update_time
+        values
+        <foreach collection="list" index="index" item="item" separator=",">
+            (#{item.trainNo}, #{item.startStationName}, #{item.endStationName} , #{item.departStationName} ,
+            #{item.destStationName} , #{item.departureDate}, #{item.distance} , #{item.ydz} , #{item.edz} , #{item.swz}
+            , #{item.tdz} , #{item.rz} , #{item.yz} , #{item.gjrws} , #{item.gjrwx} , #{item.dws} , #{item.dwx} ,
+            #{item.ydws} , #{item.ydwx} , #{item.edws} , #{item.edwz} , #{item.edwx} , #{item.item.wz} , #{item.item.qt}
+            , #{item.rws} , #{item.rwx} , #{item.yws} , #{item.ywz} , #{item.ywx} , #{item.addTime} ,
+            #{item.updateTime})
+        </foreach>
     </insert>
 
 </mapper>

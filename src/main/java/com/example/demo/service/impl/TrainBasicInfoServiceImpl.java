@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -109,6 +110,7 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
         List<TrainInfo> trainInfoList = coreZZCX.query(trainBasicInfo.getDepartStationName(), trainBasicInfo.getDestStationName(), Integer.parseInt(date));
         LOGGER.info("查询耗时 = {}", (System.currentTimeMillis() - start));
         if (!CollectionUtils.isEmpty(trainInfoList)) {
+            List<TrainBasicInfo> trainBasicInfoList = new ArrayList<>();
             for (TrainInfo trainInfo : trainInfoList) {
                 if (StringUtils.startsWithAny(trainInfo.getCc(), "G")) {
                     // 过滤G车次
@@ -164,8 +166,10 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                 trainBasicInfo1.setQt(pjInfo.getQt());
                 trainBasicInfo1.setAddTime(new Date());
                 trainBasicInfo1.setUpdateTime(new Date());
-                trainBasicInfoMapper.insert(trainBasicInfo1);
+                //trainBasicInfoMapper.insert(trainBasicInfo1);
+                trainBasicInfoList.add(trainBasicInfo1);
             }
+            trainBasicInfoMapper.batchInsert(trainBasicInfoList);
         } else {
             LOGGER.info("查询结果为空,参数 = {}", JacksonJsonUtils.toJson(trainBasicInfo));
         }

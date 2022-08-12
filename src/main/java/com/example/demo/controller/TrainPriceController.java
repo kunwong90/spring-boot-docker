@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping
 public class TrainPriceController {
 
-    private static final ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(200, 200,
+    private static final ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(500, 500,
             60, TimeUnit.SECONDS, new LinkedBlockingDeque<>(),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
