@@ -110,6 +110,10 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
         LOGGER.info("查询耗时 = {}", (System.currentTimeMillis() - start));
         if (!CollectionUtils.isEmpty(trainInfoList)) {
             for (TrainInfo trainInfo : trainInfoList) {
+                if (StringUtils.startsWithAny(trainInfo.getCc(), "G")) {
+                    // 过滤G车次
+                    continue;
+                }
                 PJInfo pjInfo = trainInfo.getPj();
                 TrainBasicInfo trainBasicInfo1 = new TrainBasicInfo();
                 trainBasicInfo1.setTrainNo(trainInfo.getCc());

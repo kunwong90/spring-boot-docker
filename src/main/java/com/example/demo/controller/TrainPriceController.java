@@ -12,10 +12,17 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping
 public class TrainPriceController {
+
+    private static final ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(200, 200,
+            60, TimeUnit.SECONDS, new LinkedBlockingDeque<>(),
+            new ThreadPoolExecutor.CallerRunsPolicy());
 
     @Resource
     private ITrainBasicInfoService trainBasicInfoService;
@@ -39,7 +46,7 @@ public class TrainPriceController {
             String name = stationName.split("\\|")[1];
             stationNameList.add(name);
         }
-        for (int i = 0; i < stationNameList.size(); i++) {
+        /*for (int i = 0; i < stationNameList.size(); i++) {
             String depName = stationNameList.get(i);
             for (String destName : stationNameList) {
                 TrainBasicInfo trainBasicInfo = new TrainBasicInfo();
@@ -48,6 +55,37 @@ public class TrainPriceController {
                 trainBasicInfo.setDepartureDate(new Date());
                 trainBasicInfoService.queryAndSave(trainBasicInfo);
             }
+        }*/
+        int threadNums = THREAD_POOL_EXECUTOR.getCorePoolSize();
+        int total = stationNameList.size();
+        System.out.println("total = " + total);
+        int avg = total / threadNums;
+        System.out.println("avg = " + avg);
+
+        if (avg != 0) {
+            threadNums = threadNums + 1;
+        }
+        for (int i = 0; i < threadNums; i++) {
+            int fromIndex = i * avg;
+            int endIndex = (i + 1) * avg;
+            if (endIndex > total) {
+                endIndex = total;
+            }
+            int finalFromIndex = fromIndex;
+            int finalEndIndex = endIndex;
+            THREAD_POOL_EXECUTOR.submit(() -> {
+                List<String> subList = stationNameList.subList(finalFromIndex, finalEndIndex);
+                for (int i1 = 0; i1 < subList.size(); i1++) {
+                    String depName = subList.get(i1);
+                    for (String destName : stationNameList) {
+                        TrainBasicInfo trainBasicInfo = new TrainBasicInfo();
+                        trainBasicInfo.setDepartStationName(depName);
+                        trainBasicInfo.setDestStationName(destName);
+                        trainBasicInfo.setDepartureDate(new Date());
+                        trainBasicInfoService.queryAndSave(trainBasicInfo);
+                    }
+                }
+            });
         }
         return "{\"success\":true}";
     }
