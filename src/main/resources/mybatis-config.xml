@@ -20,6 +20,8 @@
 
     </settings>
 
-
+    <!--<plugins>
+        <plugin interceptor="com.example.demo.mybatis.interceptor.SlowSQLInterceptor"/>
+    </plugins>-->
 
 </configuration>

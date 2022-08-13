@@ -1,6 +1,7 @@
 package com.example.demo.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -56,7 +57,8 @@ public final class JacksonJsonUtils {
                 .configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true)
                 .setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
                 .registerModule(javaTimeModule)
-                .addMixIn(Map.class, IgnoreType.class);
+                .addMixIn(Map.class, IgnoreType.class)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
     /**

@@ -11,4 +11,7 @@ public interface TrainBasicInfoMapper {
     int insert(TrainBasicInfo trainBasicInfo);
 
     int batchInsert(List<TrainBasicInfo> trainBasicInfoList);
+
+
+    int updateById(TrainBasicInfo trainBasicInfo);
 }

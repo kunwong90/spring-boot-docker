@@ -7,11 +7,11 @@ import com.example.demo.trainprice.utils.h12306.core.CoreZZCX;
 import com.example.demo.trainprice.utils.h12306.pojo.PJInfo;
 import com.example.demo.trainprice.utils.h12306.pojo.TrainInfo;
 import com.example.demo.util.JacksonJsonUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -109,13 +109,23 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
         String date = new SimpleDateFormat("yyyyMMdd").format(trainBasicInfo.getDepartureDate());
         List<TrainInfo> trainInfoList = coreZZCX.query(trainBasicInfo.getDepartStationName(), trainBasicInfo.getDestStationName(), Integer.parseInt(date));
         LOGGER.info("查询耗时 = {}", (System.currentTimeMillis() - start));
-        if (!CollectionUtils.isEmpty(trainInfoList)) {
+        if (CollectionUtils.isNotEmpty(trainInfoList)) {
             List<TrainBasicInfo> trainBasicInfoList = new ArrayList<>();
             for (TrainInfo trainInfo : trainInfoList) {
-                if (StringUtils.startsWithAny(trainInfo.getCc(), "G")) {
+                /*if (StringUtils.startsWithAny(trainInfo.getCc(), "G")) {
                     // 过滤G车次
                     continue;
+                }*/
+                TrainBasicInfo query = new TrainBasicInfo();
+                query.setTrainNo(trainInfo.getCc());
+                query.setDepartStationName(trainInfo.getFz());
+                query.setDestStationName(trainInfo.getDz());
+                try {
+                    query.setDepartureDate(new SimpleDateFormat("yyyy-MM-dd").parse(date));
+                } catch (Exception ignore) {
+
                 }
+                TrainBasicInfo result = trainBasicInfoMapper.selectOne(query);
                 PJInfo pjInfo = trainInfo.getPj();
                 TrainBasicInfo trainBasicInfo1 = new TrainBasicInfo();
                 trainBasicInfo1.setTrainNo(trainInfo.getCc());
@@ -164,12 +174,15 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                 }
                 trainBasicInfo1.setWz(pjInfo.getWz());
                 trainBasicInfo1.setQt(pjInfo.getQt());
-                trainBasicInfo1.setAddTime(new Date());
                 trainBasicInfo1.setUpdateTime(new Date());
-                //trainBasicInfoMapper.insert(trainBasicInfo1);
-                trainBasicInfoList.add(trainBasicInfo1);
+                if (result == null) {
+                    trainBasicInfo1.setAddTime(new Date());
+                    trainBasicInfoMapper.insert(trainBasicInfo1);
+                } else {
+                    trainBasicInfo1.setId(result.getId());
+                    trainBasicInfoMapper.updateById(trainBasicInfo1);
+                }
             }
-            trainBasicInfoMapper.batchInsert(trainBasicInfoList);
         } else {
             LOGGER.info("查询结果为空,参数 = {}", JacksonJsonUtils.toJson(trainBasicInfo));
         }

@@ -260,18 +260,119 @@
 
     <insert id="batchInsert" parameterType="com.example.demo.entity.TrainBasicInfo">
         insert into train_basic_info
-        (rain_no , start_station_name , end_station_name , depart_station_name , dest_station_name, departure_date,
+        (train_no , start_station_name , end_station_name , depart_station_name , dest_station_name, departure_date,
         distance, ydz, edz, swz, tdz, rz, yz, gjrws, gjrwx, dws, dwx, ydws, ydwx, edws, edwz, edwx, wz, qt, rws, rwx,
-        yws, ywz, ywx, add_time, update_time
+        yws, ywz, ywx, add_time, update_time)
         values
         <foreach collection="list" index="index" item="item" separator=",">
             (#{item.trainNo}, #{item.startStationName}, #{item.endStationName} , #{item.departStationName} ,
             #{item.destStationName} , #{item.departureDate}, #{item.distance} , #{item.ydz} , #{item.edz} , #{item.swz}
             , #{item.tdz} , #{item.rz} , #{item.yz} , #{item.gjrws} , #{item.gjrwx} , #{item.dws} , #{item.dwx} ,
-            #{item.ydws} , #{item.ydwx} , #{item.edws} , #{item.edwz} , #{item.edwx} , #{item.item.wz} , #{item.item.qt}
+            #{item.ydws} , #{item.ydwx} , #{item.edws} , #{item.edwz} , #{item.edwx} , #{item.wz} , #{item.qt}
             , #{item.rws} , #{item.rwx} , #{item.yws} , #{item.ywz} , #{item.ywx} , #{item.addTime} ,
             #{item.updateTime})
         </foreach>
     </insert>
+
+    <update id="updateById" parameterType="com.example.demo.entity.TrainBasicInfo">
+        update train_basic_info
+        <set>
+            <if test="trainNo != null">
+                train_no = #{trainNo},
+            </if>
+            <if test="startStationName != null">
+                start_station_name = #{startStationName},
+            </if>
+            <if test="endStationName != null">
+                end_station_name = #{endStationName} ,
+            </if>
+            <if test="departStationName != null">
+                depart_station_name = #{departStationName} ,
+            </if>
+            <if test="destStationName != null">
+                dest_station_name = #{destStationName} ,
+            </if>
+            <if test="departureDate != null">
+                departure_date = #{departureDate},
+            </if>
+            <if test="distance != null">
+                distance = #{distance} ,
+            </if>
+            <if test="ydz != null">
+                ydz = #{ydz} ,
+            </if>
+            <if test="edz != null">
+                edz = #{edz} ,
+            </if>
+            <if test="swz != null">
+                swz = #{swz} ,
+            </if>
+            <if test="tdz != null">
+                tdz = #{tdz} ,
+            </if>
+            <if test="rz != null">
+                rz = #{rz} ,
+            </if>
+            <if test="yz != null">
+                yz = #{yz} ,
+            </if>
+            <if test="gjrws != null">
+                gjrws = #{gjrws} ,
+            </if>
+            <if test="gjrwx != null">
+                gjrwx = #{gjrwx} ,
+            </if>
+            <if test="dws != null">
+                dws = #{dws} ,
+            </if>
+            <if test="dwx != null">
+                dwx = #{dwx} ,
+            </if>
+            <if test="ydws != null">
+                ydws = #{ydws} ,
+            </if>
+            <if test="ydwx != null">
+                ydwx = #{ydwx} ,
+            </if>
+            <if test="edws != null">
+                edws = #{edws} ,
+            </if>
+            <if test="edwz != null">
+                edwz = #{edwz} ,
+            </if>
+            <if test="edwx != null">
+                edwx = #{edwx} ,
+            </if>
+            <if test="wz != null">
+                wz = #{wz} ,
+            </if>
+            <if test="qt != null">
+                qt = #{qt} ,
+            </if>
+            <if test="rws != null">
+                rws = #{rws} ,
+            </if>
+            <if test="rwx != null">
+                rwx = #{rwx} ,
+            </if>
+            <if test="yws != null">
+                yws = #{yws} ,
+            </if>
+            <if test="ywz != null">
+                ywz = #{ywz} ,
+            </if>
+            <if test="ywx != null">
+                ywx = #{ywx} ,
+            </if>
+            <if test="addTime != null">
+                add_time = #{addTime} ,
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
 
 </mapper>

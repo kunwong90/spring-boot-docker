@@ -58,9 +58,7 @@ public class TrainPriceController {
         }*/
         int threadNums = THREAD_POOL_EXECUTOR.getCorePoolSize();
         int total = stationNameList.size();
-        System.out.println("total = " + total);
         int avg = total / threadNums;
-        System.out.println("avg = " + avg);
 
         if (avg != 0) {
             threadNums = threadNums + 1;
