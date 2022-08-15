@@ -6,5 +6,5 @@ public interface ITrainBasicInfoService {
 
     TrainBasicInfo selectOne(TrainBasicInfo trainBasicInfo);
 
-    void queryAndSave(TrainBasicInfo trainBasicInfo);
+    void queryAllAndSave();
 }

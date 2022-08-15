@@ -10,7 +10,7 @@ public class TrainBasicInfo {
     private String startStationName;
     private String endStationName;
 
-    private String departStationName;
+    private String departureStationName;
 
     private String destStationName;
 
@@ -162,12 +162,12 @@ public class TrainBasicInfo {
         this.endStationName = endStationName;
     }
 
-    public String getDepartStationName() {
-        return departStationName;
+    public String getDepartureStationName() {
+        return departureStationName;
     }
 
-    public void setDepartStationName(String departStationName) {
-        this.departStationName = departStationName;
+    public void setDepartureStationName(String departureStationName) {
+        this.departureStationName = departureStationName;
     }
 
     public String getDestStationName() {
