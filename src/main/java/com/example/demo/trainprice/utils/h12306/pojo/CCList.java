@@ -1,14 +1,16 @@
 package com.example.demo.trainprice.utils.h12306.pojo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CCList {
-    private ArrayList<Integer> list;
+    private List<Integer> list;
 
-    public ArrayList<Integer> getList() {
-        if (this.list == null) {
-            this.list = new ArrayList<>();
-        }
+    public CCList() {
+        this.list = new ArrayList<>();
+    }
+
+    public List<Integer> getList() {
         return this.list;
     }
 

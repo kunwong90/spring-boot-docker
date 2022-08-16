@@ -6,13 +6,13 @@ public class YunXingInfo {
     /**
      * 结束日期
      */
-    int jsrq;
+    private int jsrq;
     /**
      * 开始日期
      */
-    int ksrq;
-    int kxgl;
-    int kxzq;
+    private int ksrq;
+    private int kxgl;
+    private int kxzq;
 
     public YunXingInfo() {
     }
@@ -24,39 +24,46 @@ public class YunXingInfo {
         this.jsrq = jsrq;
     }
 
-    public int getKxzq() {
-        return this.kxzq;
-    }
-
-    public void setKxzq(int kxzq) {
-        this.kxzq = kxzq;
-    }
-
-    public int getKxgl() {
-        return this.kxgl;
-    }
-
-    public void setKxgl(int kxgl) {
-        this.kxgl = kxgl;
-    }
-
-    public int getKsrq() {
-        return this.ksrq;
-    }
-
-    public void setKsrq(int ksrq) {
-        this.ksrq = ksrq;
-    }
-
     public int getJsrq() {
-        return this.jsrq;
+        return jsrq;
     }
 
     public void setJsrq(int jsrq) {
         this.jsrq = jsrq;
     }
 
+    public int getKsrq() {
+        return ksrq;
+    }
+
+    public void setKsrq(int ksrq) {
+        this.ksrq = ksrq;
+    }
+
+    public int getKxgl() {
+        return kxgl;
+    }
+
+    public void setKxgl(int kxgl) {
+        this.kxgl = kxgl;
+    }
+
+    public int getKxzq() {
+        return kxzq;
+    }
+
+    public void setKxzq(int kxzq) {
+        this.kxzq = kxzq;
+    }
+
+    @Override
     public String toString() {
-        return "YunXingInfo{kxzq=" + this.kxzq + ", kxgl=" + this.kxgl + ", ksrq=" + this.ksrq + ", jsrq=" + this.jsrq + '}';
+        final StringBuffer sb = new StringBuffer("YunXingInfo{");
+        sb.append("jsrq=").append(jsrq);
+        sb.append(", ksrq=").append(ksrq);
+        sb.append(", kxgl=").append(kxgl);
+        sb.append(", kxzq=").append(kxzq);
+        sb.append('}');
+        return sb.toString();
     }
 }

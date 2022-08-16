@@ -1,9 +1,9 @@
 package com.example.demo.trainprice.utils.h12306.pojo;
 
 public class DFInfo {
-    String ds;
-    String fs;
-    String station;
+    private String ds;
+    private String fs;
+    private String station;
 
     public DFInfo() {
     }
@@ -14,16 +14,8 @@ public class DFInfo {
         this.fs = fs;
     }
 
-    public String getStation() {
-        return this.station;
-    }
-
-    public void setStation(String station) {
-        this.station = station;
-    }
-
     public String getDs() {
-        return this.ds;
+        return ds;
     }
 
     public void setDs(String ds) {
@@ -31,10 +23,28 @@ public class DFInfo {
     }
 
     public String getFs() {
-        return this.fs;
+        return fs;
     }
 
     public void setFs(String fs) {
         this.fs = fs;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("DFInfo{");
+        sb.append("ds='").append(ds).append('\'');
+        sb.append(", fs='").append(fs).append('\'');
+        sb.append(", station='").append(station).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

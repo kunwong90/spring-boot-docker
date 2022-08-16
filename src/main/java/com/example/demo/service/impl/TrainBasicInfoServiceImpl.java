@@ -199,6 +199,14 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                     LOGGER.warn("结束日期 {} 大于发车时间 {}", yunXingInfo.getJsrq(), date);
                                                     continue;
                                                 }
+                                                PJInfo pjInfo = trainInfo.getPj();
+                                                if (StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getYws())
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getYwz())
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getYwx())
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getRws())
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getRwx())) {
+                                                    continue;
+                                                }
                                                 TrainBasicInfo query = new TrainBasicInfo();
                                                 query.setTrainNo(trainInfo.getCc());
                                                 query.setDepartureStationName(trainInfo.getFz());
@@ -209,7 +217,6 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                     LOGGER.error("日期转换异常", e);
                                                 }
                                                 TrainBasicInfo result = trainBasicInfoMapper.selectOne(query);
-                                                PJInfo pjInfo = trainInfo.getPj();
                                                 TrainBasicInfo trainBasicInfo1 = new TrainBasicInfo();
                                                 trainBasicInfo1.setTrainNo(trainInfo.getCc());
                                                 trainBasicInfo1.setStartStationName(trainInfo.getSfz());
@@ -230,7 +237,7 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                 trainBasicInfo1.setGjrwx(pjInfo.BLANK_PRICE);
                                                 trainBasicInfo1.setDws(pjInfo.getDw());
                                                 trainBasicInfo1.setDwx(pjInfo.BLANK_PRICE);
-                                                if (StringUtils.startsWith(trainBasicInfo.getTrainNo(), "D")) {
+                                                if (StringUtils.startsWith(trainBasicInfo1.getTrainNo(), "D")) {
                                                     trainBasicInfo1.setYdws(pjInfo.getRws());
                                                     trainBasicInfo1.setYdwx(pjInfo.getRwx());
                                                     trainBasicInfo1.setEdws(pjInfo.getYws());
@@ -269,7 +276,7 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                 }
                                             }
                                         } else {
-                                            LOGGER.info("查询结果为空,参数 = {}", JacksonJsonUtils.toJson(trainBasicInfo));
+                                            //LOGGER.info("查询结果为空,参数 = {}", JacksonJsonUtils.toJson(trainBasicInfo));
                                         }
                                     }
                                 }

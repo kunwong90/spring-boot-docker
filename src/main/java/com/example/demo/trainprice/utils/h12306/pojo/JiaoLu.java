@@ -2,13 +2,13 @@ package com.example.demo.trainprice.utils.h12306.pojo;
 
 
 public class JiaoLu {
-    String ddj;
-    int endDate;
-    String flag1;
-    String flag2;
-    int startDate;
-    String trainType;
-    String trains;
+    private String ddj;
+    private int endDate;
+    private String flag1;
+    private String flag2;
+    private int startDate;
+    private String trainType;
+    private String trains;
 
     public JiaoLu() {
     }
@@ -33,16 +33,16 @@ public class JiaoLu {
         this.trains = items[6];
     }
 
-    public int getStartDate() {
-        return this.startDate;
+    public String getDdj() {
+        return ddj;
     }
 
-    public void setStartDate(int startDate) {
-        this.startDate = startDate;
+    public void setDdj(String ddj) {
+        this.ddj = ddj;
     }
 
     public int getEndDate() {
-        return this.endDate;
+        return endDate;
     }
 
     public void setEndDate(int endDate) {
@@ -50,7 +50,7 @@ public class JiaoLu {
     }
 
     public String getFlag1() {
-        return this.flag1;
+        return flag1;
     }
 
     public void setFlag1(String flag1) {
@@ -58,38 +58,48 @@ public class JiaoLu {
     }
 
     public String getFlag2() {
-        return this.flag2;
+        return flag2;
     }
 
     public void setFlag2(String flag2) {
         this.flag2 = flag2;
     }
 
+    public int getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(int startDate) {
+        this.startDate = startDate;
+    }
+
     public String getTrainType() {
-        return this.trainType;
+        return trainType;
     }
 
     public void setTrainType(String trainType) {
         this.trainType = trainType;
     }
 
-    public String getDdj() {
-        return this.ddj;
-    }
-
-    public void setDdj(String ddj) {
-        this.ddj = ddj;
-    }
-
     public String getTrains() {
-        return this.trains;
+        return trains;
     }
 
     public void setTrains(String trains) {
         this.trains = trains;
     }
 
+    @Override
     public String toString() {
-        return "JiaoLu{startDate=" + this.startDate + ", endDate=" + this.endDate + ", flag1='" + this.flag1 + "', flag2='" + this.flag2 + "', trainType='" + this.trainType + "', ddj='" + this.ddj + "', trains='" + this.trains + "'}";
+        final StringBuffer sb = new StringBuffer("JiaoLu{");
+        sb.append("ddj='").append(ddj).append('\'');
+        sb.append(", endDate=").append(endDate);
+        sb.append(", flag1='").append(flag1).append('\'');
+        sb.append(", flag2='").append(flag2).append('\'');
+        sb.append(", startDate=").append(startDate);
+        sb.append(", trainType='").append(trainType).append('\'');
+        sb.append(", trains='").append(trains).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

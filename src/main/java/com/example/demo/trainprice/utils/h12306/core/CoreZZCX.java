@@ -20,7 +20,6 @@ import java.util.*;
 public class CoreZZCX {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoreZZCX.class);
     private DataCenter dataCenter = new DataCenter();
-    public static final String PRICE_BLANK = "—";
     private int ErrCode;
     private double bxf;
 
@@ -89,7 +88,7 @@ public class CoreZZCX {
             jbpj = ((i2 - 2500) * 0.05861d * 0.5d) + 106.6702d;
         }
         double bx = Math.ceil((0.02d * jbpj) * 10.0d) / 10.0d;
-        StringBuilder sb = new StringBuilder(String.format("%.2f", Double.valueOf(bx)));
+        StringBuilder sb = new StringBuilder(String.format("%.2f", bx));
         int lastCharPos = sb.length() - 1;
         if (sb.charAt(lastCharPos) != '0') {
             bx = Double.parseDouble(sb.deleteCharAt(lastCharPos).toString()) + 0.1d;
@@ -118,17 +117,17 @@ public class CoreZZCX {
         double KT;
         double JBPJ;
         double JBPJ_R2;
-        double JK;
-        PJInfo RET3;
+        double jk;
+        PJInfo pjResult;
         Object obj;
         double ed;
         double yd;
         double d;
         double d2;
         // 加快票价
-        double JK2 = 0.0d;
+        double jk2 = 0.0d;
         // 空调票价
-        double KT2 = 0.0d;
+        double kt2 = 0.0d;
         PJInfo RET4 = new PJInfo();
         double JBPJ2 = JcJb[0];
         if (distance >= 20) {
@@ -138,16 +137,16 @@ public class CoreZZCX {
         }
         if (lcdj != 52) {
             if (distance < 130) {
-                JK2 = 1.0d;
+                jk2 = 1.0d;
             } else {
-                JK2 = Math.round(JcJb[1] * 0.2d);
+                jk2 = Math.round(JcJb[1] * 0.2d);
             }
         }
         if (sfkt) {
             if (distance < 100) {
-                KT2 = 1.0d;
+                kt2 = 1.0d;
             } else {
-                KT2 = Math.rint(JcJb[1] * 0.25d);
+                kt2 = Math.rint(JcJb[1] * 0.25d);
             }
         }
         // 卧铺 0:硬卧上;1:硬卧中;2:硬卧下;3:软卧上;4:软卧下
@@ -170,10 +169,10 @@ public class CoreZZCX {
         if (pjsf == 1) {
             RET2 = RET;
             wp = wp2;
-            KT = KT2;
+            KT = kt2;
             JBPJ = JBPJ2;
             JBPJ_R2 = JBPJ_R;
-            JK = JK2;
+            jk = jk2;
         } else {
             float sf = (pjsf / 100.0f) + 1.0f;
             RET2 = RET;
@@ -187,36 +186,36 @@ public class CoreZZCX {
                 wp2 = wp3;
             }
             wp = wp2;
-            double JK3 = Math.round(sf * JK2);
+            double JK3 = Math.round(sf * jk2);
             if (lcdj != 51) {
                 JK3 = Math.round(JK3 * 2.0d);
             }
-            KT = Math.round(sf * KT2);
+            KT = Math.round(sf * kt2);
             JBPJ = JBPJ3;
             JBPJ_R2 = JBPJ_R3;
-            JK = JK3;
+            jk = JK3;
         }
-        int ZPJ2 = (int) Math.round(JBPJ + JK + KT);
-        int ZPJ_R = (int) Math.round(JBPJ_R2 + JK + KT);
+        int ZPJ2 = (int) Math.round(JBPJ + jk + KT);
+        int ZPJ_R = (int) Math.round(JBPJ_R2 + jk + KT);
         // 候车室空调费
         int hckt = distance > 200 ? 1 : 0;
         int ZPJ3 = ZPJ2 + hckt;
         double kcbxf = getNewBxf(this.bxf);
         if (JBPJ > 5.0d) {
             int ZPJ4 = ZPJ3 + 1;
-            RET3 = RET2;
-            RET3.setYz(getNumberFormat().format(ZPJ4 - kcbxf));
+            pjResult = RET2;
+            pjResult.setYz(getNumberFormat().format(ZPJ4 - kcbxf));
 
         } else {
-            RET3 = RET2;
-            RET3.setYz(getNumberFormat().format((ZPJ3 + 0.5d) - kcbxf));
+            pjResult = RET2;
+            pjResult.setYz(getNumberFormat().format((ZPJ3 + 0.5d) - kcbxf));
 
         }
         if (JBPJ_R2 > 5.0d) {
             ZPJ_R++;
-            RET3.setRz(getNumberFormat().format(ZPJ_R - kcbxf));
+            pjResult.setRz(getNumberFormat().format(ZPJ_R - kcbxf));
         } else {
-            RET3.setRz(getNumberFormat().format((ZPJ_R + 0.5d) - kcbxf));
+            pjResult.setRz(getNumberFormat().format((ZPJ_R + 0.5d) - kcbxf));
         }
         int[] plus = new int[4];
         int i2 = 0;
@@ -225,20 +224,20 @@ public class CoreZZCX {
             plus[i2] = Integer.parseInt(ps);
             i2++;
         }
-        RET3.setYdz("—");
-        RET3.setEdz("—");
+        pjResult.setYdz("—");
+        pjResult.setEdz("—");
         String fck = Integer.toBinaryString(plus[1]);
         int slen = fck.length();
         StringBuilder zr = new StringBuilder();
         int ZPJ5 = 0;
         while (true) {
-            double JK4 = JK;
+            double JK4 = jk;
             if (ZPJ5 >= 3 - slen) {
                 break;
             }
             zr.append("0");
             ZPJ5++;
-            JK = JK4;
+            jk = JK4;
         }
         String fck2 = zr.append(fck).toString();
         if (fck2.substring(0, 1).equals("0")) {
@@ -273,34 +272,34 @@ public class CoreZZCX {
             }
             double yd6 = d2;
             double ed2 = ed <= 5.0d ? ed + d : 1.0d + ed;
-            RET3.setYdz(String.format("%s", Math.round(Math.round(yd6) - kcbxf)));
-            RET3.setEdz(String.format("%s", Math.round(Math.round(ed2) - kcbxf)));
+            pjResult.setYdz(String.format("%s", Math.round(Math.round(yd6) - kcbxf)));
+            pjResult.setEdz(String.format("%s", Math.round(Math.round(ed2) - kcbxf)));
         }
-        RET3.setYws("—");
-        RET3.setYwz("—");
-        RET3.setYwx("—");
+        pjResult.setYws("—");
+        pjResult.setYwz("—");
+        pjResult.setYwx("—");
         if (plus[2] != 0) {
             // 硬座票价
-            double YZPJ = Double.parseDouble(RET3.getYz());
-            RET3.setYws(getNumberFormat().format(wp[0] + YZPJ + 10.0d));
-            RET3.setYwz(getNumberFormat().format(wp[1] + YZPJ + 10.0d));
-            RET3.setYwx(getNumberFormat().format(wp[2] + YZPJ + 10.0d));
+            double YZPJ = Double.parseDouble(pjResult.getYz());
+            pjResult.setYws(getNumberFormat().format(wp[0] + YZPJ + 10.0d));
+            pjResult.setYwz(getNumberFormat().format(wp[1] + YZPJ + 10.0d));
+            pjResult.setYwx(getNumberFormat().format(wp[2] + YZPJ + 10.0d));
         }
-        RET3.setRws("—");
-        RET3.setRwx("—");
+        pjResult.setRws("—");
+        pjResult.setRwx("—");
         if (plus[3] != 0) {
             // 软座票价
-            double RZPJ = Double.parseDouble(RET3.getRz());
-            RET3.setRws(getNumberFormat().format(wp[3] + RZPJ + 10.0d));
-            RET3.setRwx(getNumberFormat().format(wp[4] + RZPJ + 10.0d));
+            double rzpj = Double.parseDouble(pjResult.getRz());
+            pjResult.setRws(getNumberFormat().format(wp[3] + rzpj + 10.0d));
+            pjResult.setRwx(getNumberFormat().format(wp[4] + rzpj + 10.0d));
         }
         if (plus[0] == 0) {
-            RET3.setYz("—");
+            pjResult.setYz("—");
         }
         if (fck2.substring(2, 3).equals(obj)) {
-            RET3.setRz("—");
+            pjResult.setRz("—");
         }
-        return RET3;
+        return pjResult;
     }
 
     public int getZMWZByName(String zm) {
@@ -336,7 +335,7 @@ public class CoreZZCX {
     }
 
     public int[] getstationSE(int pos) {
-        int[] ReSE = {((Integer) getDataCenter().getZMHZSY2()[0].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[1].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[2].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[3].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[4].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[5].get(pos)).intValue()};
+        int[] ReSE = {(Integer) getDataCenter().getZMHZSY2()[0].get(pos), (Integer) getDataCenter().getZMHZSY2()[1].get(pos), (Integer) getDataCenter().getZMHZSY2()[2].get(pos), (Integer) getDataCenter().getZMHZSY2()[3].get(pos), (Integer) getDataCenter().getZMHZSY2()[4].get(pos), (Integer) getDataCenter().getZMHZSY2()[5].get(pos)};
         return ReSE;
     }
 
@@ -757,21 +756,21 @@ public class CoreZZCX {
         setRq(rq);
         int[] ST = getstation(fz, 0);
         int[] ET = getstation(dz, 0);
-        String ErrStation = "";
+        String errorStation = "";
         int RtnVal = 0;
         if (ST[1] == 0) {
-            ErrStation = "起始站";
+            errorStation = "起始站";
             RtnVal = 1;
         }
         if (ET[1] == 0) {
-            ErrStation = "终点站";
+            errorStation = "终点站";
             RtnVal = 2;
         }
         if (ST[1] == 0 && ET[1] == 0) {
-            ErrStation = "起始站和终点站";
+            errorStation = "起始站和终点站";
             RtnVal = 3;
         }
-        if (ErrStation.length() > 0) {
+        if (errorStation.length() > 0) {
             setErrCode(RtnVal);
             return null;
         }
@@ -970,7 +969,6 @@ public class CoreZZCX {
     }
 
     private DataCenter getDataCenter() {
-        //return ((SmApplication) ((Activity) getContext()).getApplication()).getDataCenter();
         return dataCenter;
     }
 

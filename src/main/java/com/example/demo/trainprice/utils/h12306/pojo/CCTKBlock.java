@@ -3,7 +3,7 @@ package com.example.demo.trainprice.utils.h12306.pojo;
 
 import java.nio.ByteBuffer;
 
-/* loaded from: classes2.dex */
+
 public class CCTKBlock {
     private short ccwz;
     private byte czcc;

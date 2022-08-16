@@ -1,9 +1,9 @@
 package com.example.demo.trainprice.utils.h12306.datacenter;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 public class IOFactory {
@@ -16,20 +16,22 @@ public class IOFactory {
     }
 
 
-    public ArrayList<String> dataloader_line(String filename, int iniSize) throws Exception {
+    public List<String> dataloader_line(String filename, int iniSize) throws Exception {
         return dataloader_line(getInpustStream(filename), iniSize);
     }
 
-    public ArrayList<String> dataloader_line(InputStream in, int iniSize) throws Exception {
+    public List<String> dataloader_line(InputStream in, int iniSize) throws Exception {
         ArrayList<String> Rtns = iniSize > 0 ? new ArrayList<>(iniSize) : new ArrayList<>();
-        InputStreamReader inputstreamReader = new InputStreamReader(in, "UTF-8");
-        BufferedReader br = new BufferedReader(inputstreamReader);
-        while (br.ready()) {
-            Rtns.add(br.readLine());
+        try (InputStreamReader inputstreamReader = new InputStreamReader(in, StandardCharsets.UTF_8); BufferedReader br = new BufferedReader(inputstreamReader)) {
+            while (br.ready()) {
+                Rtns.add(br.readLine());
+            }
+            //br.close();
+            //inputstreamReader.close();
+            //in.close();
+        } finally {
+            in.close();
         }
-        br.close();
-        inputstreamReader.close();
-        in.close();
         return Rtns;
     }
 
@@ -78,14 +80,13 @@ public class IOFactory {
     }
 
     public List<byte[]> dataloader_binary_BlockRead(String filename, int byteCount) {
-        List cols = null;
+        List<byte[]> cols = null;
         try {
             InputStream in = getInpustStream(filename);
             BufferedInputStream bis = new BufferedInputStream(in);
             int loops = in.available() / byteCount;
-            cols = new Vector(loops);
+            cols = new ArrayList<>(loops);
             try {
-                byte[] bArr = new byte[byteCount];
                 for (int idx = 0; idx < loops; idx++) {
                     byte[] buffer = new byte[byteCount];
                     bis.read(buffer);
@@ -96,7 +97,6 @@ public class IOFactory {
             }
             bis.close();
             in.close();
-            System.gc();
         } catch (Exception e2) {
             System.out.println("readUTF Error:" + e2);
         }
@@ -126,13 +126,13 @@ public class IOFactory {
             for (int i2 = 0; i2 < sCount; i2++) {
                 int i3 = types[i2];
                 if (i3 == 0) {
-                    cols[i2] = new ArrayList(loops);
+                    cols[i2] = new ArrayList<>(loops);
                 } else if (i3 == 1) {
-                    cols[i2] = new ArrayList(loops);
+                    cols[i2] = new ArrayList<>(loops);
                 } else if (i3 == 2) {
-                    cols[i2] = new ArrayList(loops);
+                    cols[i2] = new ArrayList<>(loops);
                 } else if (i3 == 3) {
-                    cols[i2] = new ArrayList(loops);
+                    cols[i2] = new ArrayList<>(loops);
                 }
             }
             for (int idx = 0; idx < loops; idx++) {
