@@ -303,7 +303,7 @@ public class CoreZZCX {
     }
 
     public int getZMWZByName(String zm) {
-        return getDataCenter().getZMHZSY1().indexOf(zm);
+        return dataCenter.getZMHZSY1().indexOf(zm);
     }
 
     public int[] getstation(String CHstation, int SearchType) {
@@ -323,7 +323,7 @@ public class CoreZZCX {
         if (zw >= 0) {
             result = new HashSet<>();
             for (int i = 0; i < 5; i++) {
-                String newCHstation = getDataCenter().getZMHZSY1().get(zw);
+                String newCHstation = dataCenter.getZMHZSY1().get(zw);
                 if (!newCHstation.startsWith(CHstation)) {
                     break;
                 }
@@ -335,14 +335,14 @@ public class CoreZZCX {
     }
 
     public int[] getstationSE(int pos) {
-        int[] ReSE = {(Integer) getDataCenter().getZMHZSY2()[0].get(pos), (Integer) getDataCenter().getZMHZSY2()[1].get(pos), (Integer) getDataCenter().getZMHZSY2()[2].get(pos), (Integer) getDataCenter().getZMHZSY2()[3].get(pos), (Integer) getDataCenter().getZMHZSY2()[4].get(pos), (Integer) getDataCenter().getZMHZSY2()[5].get(pos)};
+        int[] ReSE = {(Integer) dataCenter.getZMHZSY2()[0].get(pos), (Integer) dataCenter.getZMHZSY2()[1].get(pos), (Integer) dataCenter.getZMHZSY2()[2].get(pos), (Integer) dataCenter.getZMHZSY2()[3].get(pos), (Integer) dataCenter.getZMHZSY2()[4].get(pos), (Integer) dataCenter.getZMHZSY2()[5].get(pos)};
         return ReSE;
     }
 
     public Hashtable<Short, String> getPassTrain1(int from, int to) {
         Hashtable<Short, String> Res = new Hashtable<>((to - from) + 1);
         for (int i = from; i <= to; i++) {
-            short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
+            short ccwz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort();
             Object RenameTrain = Res.get(Short.valueOf(ccwz));
             if (RenameTrain == null) {
                 Res.put(Short.valueOf(ccwz), Integer.toString(i));
@@ -369,7 +369,7 @@ public class CoreZZCX {
             try {
                 int startfileIdx = from / 1000;
                 int skipval = (from % 1000) * 22;
-                InputStream in = getDataCenter().getIOFactory().getInpustStream(fileName2 + startfileIdx);
+                InputStream in = dataCenter.getiOFactory().getInpustStream(fileName2 + startfileIdx);
                 BufferedInputStream bis = new BufferedInputStream(in);
                 DataInputStream dis = new DataInputStream(bis);
                 if (skipval > 0) {
@@ -408,7 +408,7 @@ public class CoreZZCX {
                             dis.close();
                             bis.close();
                             startfileIdx++;
-                            in = getDataCenter().getIOFactory().getInpustStream(fileName2 + startfileIdx);
+                            in = dataCenter.getiOFactory().getInpustStream(fileName2 + startfileIdx);
                             BufferedInputStream bis2 = new BufferedInputStream(in);
                             dis = new DataInputStream(bis2);
                             bis = bis2;
@@ -444,9 +444,9 @@ public class CoreZZCX {
     }
 
     public SimpleTrainInfo getTraininfo(int Pos) {
-        ByteBuffer btsBuffer = ByteBuffer.wrap(getDataCenter().getCCData().get(Pos));
+        ByteBuffer btsBuffer = ByteBuffer.wrap(dataCenter.getCCData().get(Pos));
         SimpleTrainInfo trainInfo = new SimpleTrainInfo();
-        trainInfo.setTrainName(getDataCenter().getCC().get(Pos));
+        trainInfo.setTrainName(dataCenter.getCC().get(Pos));
         trainInfo.setTrainDJ(btsBuffer.get());
         trainInfo.setTrainSf(btsBuffer.get());
         trainInfo.setTrainInCCTKSYs(btsBuffer.getInt());
@@ -589,7 +589,7 @@ public class CoreZZCX {
         String[] Rds3 = new String[2];
         int i5 = sStarFrom;
         while (i5 <= sStartTo3) {
-            CCTKBlock cctkFz = new CCTKBlock(getDataCenter().getCCTK().get(i5));
+            CCTKBlock cctkFz = new CCTKBlock(dataCenter.getCCTK().get(i5));
             short ccwz2 = cctkFz.getCcwz();
             Object iobj = Re24.get(Short.valueOf(ccwz2));
             if (iobj == null) {
@@ -609,12 +609,12 @@ public class CoreZZCX {
                 while (j3 < RenamesCount2) {
                     int idx_dz = Integer.parseInt(TrainRenames2[j3]);
                     // 到达站所在里程
-                    short lc_dz2 = ByteBuffer.wrap(getDataCenter().getCCTK().get(idx_dz)).getShort(i4);
+                    short lc_dz2 = ByteBuffer.wrap(dataCenter.getCCTK().get(idx_dz)).getShort(i4);
                     if (lc_dz2 > lc_fz2) {
                         SimpleTrainInfo tInfo = coreZZCX.getTraininfo(ccwz2);
                         int j4 = j3;
                         int RenamesCount3 = RenamesCount2;
-                        CCTKBlock cctkDz = new CCTKBlock(getDataCenter().getCCTK().get(idx_dz));
+                        CCTKBlock cctkDz = new CCTKBlock(dataCenter.getCCTK().get(idx_dz));
                         String[] SfZd = coreZZCX.getTrainSEinfo(tInfo.getTrainInCCTKSYs(), tInfo.getTrainInCCTKSYe());
                         String dj = coreZZCX.lcdj(tInfo.getTrainDJ(), tInfo.isTrainSfkt());
                         int Lc2 = lc_dz2 - lc_fz2;
@@ -652,7 +652,7 @@ public class CoreZZCX {
                         Bds3[0] = cctkFz.getZmwz();
                         Bds3[1] = cctkDz.getZmwz();
                         for (int s = 0; s < 2; s++) {
-                            Rds2[s] = getDataCenter().getZMHZSY1().get(Bds3[s]).trim();
+                            Rds2[s] = dataCenter.getZMHZSY1().get(Bds3[s]).trim();
                         }
                         int s2 = cctkFz.getCzcc();
                         int posinfull = s2 - 48;
@@ -720,20 +720,20 @@ public class CoreZZCX {
     }
 
     public String GetZMbyCC(int pos) {
-        int CCTKpos = (Integer) getDataCenter().getCCTKSY()[0].get(pos);
-        byte[] bts = getDataCenter().getCCTK().get(CCTKpos);
+        int CCTKpos = (Integer) dataCenter.getCCTKSY()[0].get(pos);
+        byte[] bts = dataCenter.getCCTK().get(CCTKpos);
         short idx = ByteBuffer.wrap(bts).getShort(8);
         return getZM(idx);
     }
 
     public Short GetZMbyCC_zmhzsyPos(int pos) {
-        int CCTKpos = (Integer) getDataCenter().getCCTKSY()[0].get(pos);
-        byte[] bts = getDataCenter().getCCTK().get(CCTKpos);
+        int CCTKpos = (Integer) dataCenter.getCCTKSY()[0].get(pos);
+        byte[] bts = dataCenter.getCCTK().get(CCTKpos);
         return ByteBuffer.wrap(bts).getShort(8);
     }
 
     public String getZM(int pos) {
-        return getDataCenter().getZMHZSY1().get(pos);
+        return dataCenter.getZMHZSY1().get(pos);
     }
 
     public String[] getTrainSEinfo(int StarPos, int EndPos) {
@@ -795,17 +795,17 @@ public class CoreZZCX {
         int trainCounter = 0;
         int minDistance = 9999999;
         for (int i = sStarFrom; i <= sStartTo; i++) {
-            short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
+            short ccwz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort();
             Object iobj = Re2.get(Short.valueOf(ccwz));
             if (iobj != null) {
                 String[] TrainRenames = iobj.toString().split(",");
                 int RenamesCount = TrainRenames.length;
-                short lc_fz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort(2);
+                short lc_fz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort(2);
                 int j = 0;
                 while (j < RenamesCount) {
                     String[] TrainRenames2 = TrainRenames;
                     int idx_dz = Integer.parseInt(TrainRenames[j]);
-                    short lc_dz = ByteBuffer.wrap(getDataCenter().getCCTK().get(idx_dz)).getShort(2);
+                    short lc_dz = ByteBuffer.wrap(dataCenter.getCCTK().get(idx_dz)).getShort(2);
                     if (lc_dz > lc_fz) {
                         int tmpDistance = lc_dz - lc_fz;
                         minDistance = Math.min(tmpDistance, minDistance);
@@ -822,7 +822,7 @@ public class CoreZZCX {
     public HashSet<Short> getAllStationPass_cctkPos(int cctkStart, int cctkEnd, HashSet<Short> stationIdxs, boolean afterStations) {
         HashSet<Short> hSet = new HashSet<>();
         for (int i = cctkStart; i < cctkEnd; i++) {
-            short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
+            short ccwz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort();
             boolean beginToadd = false;
             SimpleTrainInfo trainInfo = getTraininfo(ccwz);
             for (int j = trainInfo.getTrainInCCTKSYs(); j <= trainInfo.getTrainInCCTKSYe(); j++) {
@@ -875,12 +875,12 @@ public class CoreZZCX {
         if (pjdmStart != i && rq > 0) {
             int i2 = pjdmStart;
             while (i2 <= i) {
-                int ksrq = (Integer) getDataCenter().getPJDM()[0].get(i2);
-                int jsrq = (Integer) getDataCenter().getPJDM()[1].get(i2);
-                int xw = (Byte) getDataCenter().getPJDM()[2].get(i2);
-                int kxgl = (Integer) getDataCenter().getPJDM()[3].get(i2);
-                int kxzq = (Byte) getDataCenter().getPJDM()[4].get(i2);
-                int pjcode = (Integer) getDataCenter().getPJDM()[c].get(i2);
+                int ksrq = (Integer) dataCenter.getPJDM()[0].get(i2);
+                int jsrq = (Integer) dataCenter.getPJDM()[1].get(i2);
+                int xw = (Byte) dataCenter.getPJDM()[2].get(i2);
+                int kxgl = (Integer) dataCenter.getPJDM()[3].get(i2);
+                int kxzq = (Byte) dataCenter.getPJDM()[4].get(i2);
+                int pjcode = (Integer) dataCenter.getPJDM()[c].get(i2);
                 int i3 = i2;
                 int todayState = ZZCXCenter.trainStateToday(rq, ksrq, jsrq, kxzq, kxgl, yxts, false, null);
                 if (todayState == 1) {
@@ -907,7 +907,7 @@ public class CoreZZCX {
             }
             return pjInfo;
         }
-        int pjCode = (Integer) getDataCenter().getPJDM()[5].get(pjdmStart);
+        int pjCode = (Integer) dataCenter.getPJDM()[5].get(pjdmStart);
         byte[] pjBts2 = priceSets.get(dzZMWZ + "-" + pjCode);
         return getPJInfoFromBytes(pjBts2);
     }
@@ -917,14 +917,14 @@ public class CoreZZCX {
     }
 
     public HashMap<String, byte[]> getPriceByZMWZ(int zmwz) {
-        int pjdmStart = (Integer) getDataCenter().getZMHZSY2()[4].get(zmwz);
-        int pjdmEnd = (Integer) getDataCenter().getZMHZSY2()[5].get(zmwz);
+        int pjdmStart = (Integer) dataCenter.getZMHZSY2()[4].get(zmwz);
+        int pjdmEnd = (Integer) dataCenter.getZMHZSY2()[5].get(zmwz);
         return loadPjsets(pjdmStart, pjdmEnd, true);
     }
 
     public HashMap<String, byte[]> getPJByZMWZ(int zmwz) {
-        int zjpjStart = (Integer) getDataCenter().getZMHZSY2()[2].get(zmwz);
-        int zjpjEnd = (Integer) getDataCenter().getZMHZSY2()[3].get(zmwz);
+        int zjpjStart = (Integer) dataCenter.getZMHZSY2()[2].get(zmwz);
+        int zjpjEnd = (Integer) dataCenter.getZMHZSY2()[3].get(zmwz);
         return loadPjsets(zjpjStart, zjpjEnd, false);
     }
 
@@ -966,10 +966,6 @@ public class CoreZZCX {
 
     public void setErrCode(int errCode) {
         this.ErrCode = errCode;
-    }
-
-    private DataCenter getDataCenter() {
-        return dataCenter;
     }
 
     public ArrayList<Integer> getkSetCHstations() {

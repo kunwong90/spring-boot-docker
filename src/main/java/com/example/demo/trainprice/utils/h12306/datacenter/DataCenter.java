@@ -401,4 +401,8 @@ public class DataCenter {
         this.ddjs = null;
         this.stationLocations = null;
     }
+
+    public IOFactory getiOFactory() {
+        return iOFactory;
+    }
 }
