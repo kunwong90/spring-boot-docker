@@ -11,7 +11,9 @@ spring:
 server:
   port: 8080
   tomcat:
-    max-threads: 1
+    #max-threads: 1 # 最大工作线程数量,Spring Boot 2.3以后改为了server.tomcat.threads.max
+    threads:
+      max: 1
 arthas:
   agent-id: hsehdfsfghhwertyfad
   tunnel-server: ws://192.168.65.128:7777/ws
