@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.notify.NotifyCenter;
+import com.example.demo.notify.event.LocalDataChangeEvent;
+import com.example.demo.service.impl.LongPullingServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.concurrent.Executors;
@@ -17,23 +19,8 @@ public class AsyncController {
 
     @GetMapping(value = "/async")
     public void async(HttpServletRequest request, HttpServletResponse response) {
-        AsyncContext context = request.startAsync(request, response);
-        //context.setTimeout(1000L);
-        scheduledExecutorService.schedule(() -> {
-            try {
-                response.setHeader("Pragma", "no-cache");
-                response.setDateHeader("Expires", 0);
-                response.setHeader("Cache-Control", "no-cache,no-store");
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().println("async success");
-            } catch (Exception e) {
-
-            } finally {
-                context.complete();
-            }
-        }, 3, TimeUnit.SECONDS);
-
-
+        LongPullingServiceImpl longPullingService = new LongPullingServiceImpl();
+        longPullingService.doPolling(request);
     }
 
     @GetMapping(value = "/sync")
@@ -50,5 +37,11 @@ public class AsyncController {
         }
 
 
+    }
+
+    @GetMapping(value = "/notify")
+    public String notify1() {
+        boolean success = NotifyCenter.publishEvent(new LocalDataChangeEvent("test"));
+        return "{\"success\":" + success + "}";
     }
 }
