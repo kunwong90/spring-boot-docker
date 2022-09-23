@@ -27,7 +27,7 @@ public class NameThreadFactory implements ThreadFactory {
     public Thread newThread(Runnable r) {
         String threadName = name + id.getAndIncrement();
         Thread thread = new Thread(r, threadName);
-        thread.setDaemon(true);
+        thread.setDaemon(false);
         return thread;
     }
 }
