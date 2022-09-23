@@ -53,12 +53,13 @@ public class DeferredResultLongPollingService {
             List<DeferredResultWrapper> deferredResultWrapperList = Lists.newArrayList(deferredResults.get(username));
             if (CollectionUtils.isNotEmpty(deferredResultWrapperList)) {
                 deferredResultWrapperList.forEach(deferredResultWrapper -> {
-                    LOGGER.info("notify deferredResultWrapper = " + deferredResultWrapper.hashCode());
                     LoginResultVo loginResultVo = new LoginResultVo();
                     loginResultVoMap.put(username, loginResultVo.success());
                     deferredResultWrapper.setResult(loginResultVo.success());
                 });
                 return true;
+            } else {
+                LOGGER.info("没有待处理的请求");
             }
         }
 
@@ -72,7 +73,6 @@ public class DeferredResultLongPollingService {
             longPullingTimeOut = "30000";
         }
         DeferredResultWrapper deferredResultWrapper = new DeferredResultWrapper(Long.parseLong(longPullingTimeOut));
-        LOGGER.info("doPollingLogin deferredResultWrapper = " + deferredResultWrapper.hashCode());
 
         String json = RestUtil.getData(request);
         ObjectNode node = JacksonJsonUtils.toBean(json, ObjectNode.class);
@@ -99,13 +99,16 @@ public class DeferredResultLongPollingService {
             @Override
             public void runWithMDC() {
                 LOGGER.info("completion");
+                deferredResults.remove(username, deferredResultWrapper);
             }
         });
         LoginResultVo loginResultVo = loginResultVoMap.get(username);
         if (loginResultVo == null) {
+            LOGGER.info("进入等待队列");
             // 等待
             deferredResults.put(username, deferredResultWrapper);
         } else {
+            LOGGER.info("登录成功,直接返回");
             // 直接返回结果
             deferredResultWrapper.setResult(loginResultVo);
         }
