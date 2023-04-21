@@ -12,7 +12,7 @@ public class CCCXFactory {
     int Myfs;
     int ReturnTypeFlag;
     int SearchFlag;
-    CoreZZCX coreZZCX = new CoreZZCX();
+    CoreZZCX coreZZCX;
     char dd;
     int f_from;
     int f_to;
@@ -20,8 +20,6 @@ public class CCCXFactory {
     int howmany;
     String kwords;
     char lastChar;
-
-
     int rq;
     String tNO;
     String fname = "";
@@ -66,7 +64,8 @@ public class CCCXFactory {
             this.Myfs = 0;
         } else if (flag == 1) {
             for (int i = 0; i < CCZMs.length; i++) {
-                this.ZMCCS.add(CCZMs[i] + this.tNO);
+                ArrayList<String> arrayList = this.ZMCCS;
+                arrayList.add(CCZMs[i] + this.tNO);
             }
             this.findFile = new String[]{"ccdzzm", "ccdz"};
             this.Myfs = 1;
@@ -87,7 +86,8 @@ public class CCCXFactory {
 
     }
 
-    private ArrayList<CCList> getpsInCC(ArrayList<String> tNo, String fname, int startPS, int endPS) {
+    private ArrayList<CCList> getpsInCC(ArrayList<String> tNo, String fname, int StartPS, int EndPS) {
+        boolean isCCDZZM;
         String key;
         int wz;
         int trainCount = tNo.size();
@@ -95,21 +95,25 @@ public class CCCXFactory {
         for (int i = 0; i < trainCount; i++) {
             list.add(new CCList());
         }
-        boolean isCCDZZM = fname.equals("ccdzzm");
+        if (fname.equals("ccdzzm")) {
+            isCCDZZM = true;
+        } else {
+            isCCDZZM = false;
+        }
         String Pre = null;
         int Cpos = 0;
-        for (int i2 = startPS; i2 <= endPS; i2++) {
+        for (int i2 = StartPS; i2 <= EndPS; i2++) {
             if (isCCDZZM) {
                 key = getDataCenter().getCCDZZM()[0].get(i2).toString().trim();
-                wz = (Integer) getDataCenter().getCCDZZM()[1].get(i2);
+                wz = ((Integer) getDataCenter().getCCDZZM()[1].get(i2)).intValue();
             } else {
                 key = getDataCenter().getCCDZ()[0].get(i2).toString().trim();
-                wz = (Short) getDataCenter().getCCDZ()[1].get(i2);
+                wz = ((Short) getDataCenter().getCCDZ()[1].get(i2)).shortValue();
             }
             if (key.equals(Pre)) {
-                list.get(Cpos - 1).getList().add(wz);
+                list.get(Cpos - 1).getList().add(Integer.valueOf(wz));
             } else if (tNo.indexOf(key) >= 0) {
-                list.get(Cpos).getList().add(wz);
+                list.get(Cpos).getList().add(Integer.valueOf(wz));
                 Cpos++;
                 Pre = key;
             }
@@ -122,20 +126,20 @@ public class CCCXFactory {
         int xh = 0;
         int i = from;
         while (i <= to) {
-            int idx = (Integer) getDataCenter().getCCTKSY()[0].get(i);
+            int idx = ((Integer) getDataCenter().getCCTKSY()[0].get(i)).intValue();
             CCTKBlock cctkBlock = new CCTKBlock(getDataCenter().getCCTK().get(idx));
             int zmIdx = cctkBlock.getZmwz();
             CCItem mCCItem = new CCItem();
-            mCCItem.setNumber(xh);
-            mCCItem.setZm(getCoreZZCX().getZM(zmIdx));
-            mCCItem.setDd(cctkBlock.getDd());
-            mCCItem.setKd(cctkBlock.getKd());
-            mCCItem.setLc(cctkBlock.getLc());
-            mCCItem.setTs(cctkBlock.getDay() - 48);
-            mCCItem.setExt1(cctkBlock.getCzcc() - 48);
-            mCCItem.setExt2(cctkBlock.getZmwz());
-            mCCItem.setCcwz(cctkBlock.getCcwz());
-            mCCItem.setCctkWz(idx);
+            mCCItem.number = xh;
+            mCCItem.ZM = getCoreZZCX().getZM(zmIdx);
+            mCCItem.DD = cctkBlock.getDd();
+            mCCItem.KD = cctkBlock.getKd();
+            mCCItem.LC = cctkBlock.getLc();
+            mCCItem.TS = cctkBlock.getDay() - 48;
+            mCCItem.Ext1 = Integer.valueOf(cctkBlock.getCzcc() - 48);
+            mCCItem.Ext2 = Short.valueOf(cctkBlock.getZmwz());
+            mCCItem.ccwz = cctkBlock.getCcwz();
+            mCCItem.cctkWz = idx;
             alCCItem.add(mCCItem);
             i++;
             xh++;
@@ -147,7 +151,8 @@ public class CCCXFactory {
         for (int i = 0; i < Train.length(); i++) {
             char ChrINT = Train.charAt(i);
             if (ChrINT >= '0' && ChrINT <= '9') {
-                return Integer.parseInt(Train.substring(i, i + 1));
+                int StarPS = Integer.parseInt(Train.substring(i, i + 1));
+                return StarPS;
             }
         }
         return -1;
@@ -163,11 +168,11 @@ public class CCCXFactory {
         }
         int i = 0;
         if (fname.equals("ccdzzm")) {
-            starpos = (Integer) getDataCenter().getCCSY()[2].get(StarPS);
-            endpos = (Integer) getDataCenter().getCCSY()[3].get(StarPS);
+            starpos = ((Integer) getDataCenter().getCCSY()[2].get(StarPS)).intValue();
+            endpos = ((Integer) getDataCenter().getCCSY()[3].get(StarPS)).intValue();
         } else {
-            starpos = (Integer) getDataCenter().getCCSY()[0].get(StarPS);
-            endpos = (Integer) getDataCenter().getCCSY()[1].get(StarPS);
+            starpos = ((Integer) getDataCenter().getCCSY()[0].get(StarPS)).intValue();
+            endpos = ((Integer) getDataCenter().getCCSY()[1].get(StarPS)).intValue();
         }
         if (starpos != endpos) {
             ArrayList<CCList> CCps = getpsInCC(this.ZMCCS, fname, starpos, endpos);
@@ -176,9 +181,9 @@ public class CCCXFactory {
                 char c = this.lastChar;
                 if (c > 0) {
                     int pos = c - 'A';
-                    SimpleTrainInfo CCinfo = getCoreZZCX().getTraininfo(CCps.get(i2).getList().get(pos));
-                    int from = CCinfo.getTrainInCCTKSYs();
-                    int to = CCinfo.getTrainInCCTKSYe();
+                    SimpleTrainInfo CCinfo = getCoreZZCX().getTraininfo(CCps.get(i2).getList().get(pos).intValue());
+                    int from = CCinfo.TrainInCCTKSYs;
+                    int to = CCinfo.TrainInCCTKSYe;
                     ArrayList<CCItem> alCCItem = CCtolst(from, to);
                     this.myCCdetails.add(alCCItem);
                     this.myCClist.add(CSimpleTrainInfo(CCinfo, alCCItem.get(i), alCCItem.get(alCCItem.size() - 1)));
@@ -187,9 +192,9 @@ public class CCCXFactory {
                     int listSize = CCps.get(i2).getList().size();
                     int j = 0;
                     while (j < listSize) {
-                        SimpleTrainInfo CCinfo2 = getCoreZZCX().getTraininfo(CCps.get(i2).getList().get(j));
-                        int from2 = CCinfo2.getTrainInCCTKSYs();
-                        int to2 = CCinfo2.getTrainInCCTKSYe();
+                        SimpleTrainInfo CCinfo2 = getCoreZZCX().getTraininfo(CCps.get(i2).getList().get(j).intValue());
+                        int from2 = CCinfo2.TrainInCCTKSYs;
+                        int to2 = CCinfo2.TrainInCCTKSYe;
                         ArrayList<CCItem> alCCItem2 = CCtolst(from2, to2);
                         this.myCCdetails.add(alCCItem2);
                         ArrayList<TrainInfo> arrayList = this.myCClist;
@@ -213,53 +218,53 @@ public class CCCXFactory {
     private TrainInfo CSimpleTrainInfo(SimpleTrainInfo train, CCItem firstCCItem, CCItem lastCCItem) {
         PJInfo mPJInfo;
         TrainInfo simpleTrainInfo = new TrainInfo();
-        simpleTrainInfo.setCc(train.getTrainName());
-        simpleTrainInfo.setFullTrainNo(train.getTrainName());
-        simpleTrainInfo.setDj(getCoreZZCX().lcdj(train.getTrainDJ(), train.isTrainSfkt()));
-        simpleTrainInfo.setSfkt(train.isTrainSfkt() ? 1 : 0);
-        simpleTrainInfo.setFz(firstCCItem.getZm());
-        simpleTrainInfo.setDz(lastCCItem.getZm());
-        simpleTrainInfo.setSfz(firstCCItem.getZm());
-        simpleTrainInfo.setZdz(lastCCItem.getZm());
-        simpleTrainInfo.setKd(Common.toTime(firstCCItem.getKd()));
-        simpleTrainInfo.setDd(Common.toTime(lastCCItem.getDd()));
-        simpleTrainInfo.setDd1(Common.toTime(lastCCItem.getDd()));
-        simpleTrainInfo.setLc(lastCCItem.getLc());
-        int fzs = Common.getMinites(lastCCItem.getDd(), lastCCItem.getKd(), firstCCItem.getKd(), lastCCItem.getTs() - firstCCItem.getTs());
-        simpleTrainInfo.setLs(Common.covert2StringTime(fzs));
-        if (train.getTrainBJ() == 1) {
+        simpleTrainInfo.CC = train.TrainName;
+        simpleTrainInfo.fullTrainNo = train.TrainName;
+        simpleTrainInfo.DJ = getCoreZZCX().lcdj(train.TrainDJ, train.TrainSFKT);
+        simpleTrainInfo.SFKT = train.TrainSFKT ? 1 : 0;
+        simpleTrainInfo.FZ = firstCCItem.ZM;
+        simpleTrainInfo.DZ = lastCCItem.ZM;
+        simpleTrainInfo.SFZ = firstCCItem.ZM;
+        simpleTrainInfo.ZDZ = lastCCItem.ZM;
+        simpleTrainInfo.KD = Common.toTime(firstCCItem.KD);
+        simpleTrainInfo.DD = Common.toTime(lastCCItem.DD);
+        simpleTrainInfo.DD1 = Common.toTime(lastCCItem.DD);
+        simpleTrainInfo.LC = lastCCItem.LC;
+        int fzs = Common.getMinites(lastCCItem.DD, lastCCItem.KD, firstCCItem.KD, lastCCItem.TS - firstCCItem.TS);
+        simpleTrainInfo.LS = Common.covert2StringTime(fzs);
+        if (train.TrainBJ == 1) {
             getCoreZZCX().resetNessaryVariable();
-            double[] JcJb = getCoreZZCX().CountPJ(simpleTrainInfo.getLc());
-            mPJInfo = getCoreZZCX().CountSJPJ(train.getTrainDJ(), train.getTrainSf(), train.isTrainSfkt(), JcJb, simpleTrainInfo.getLc(), train.getTrainXw());
+            double[] JcJb = getCoreZZCX().CountPJ(simpleTrainInfo.LC);
+            mPJInfo = getCoreZZCX().CountSJPJ(train.TrainDJ, train.TrainSF, train.TrainSFKT, JcJb, simpleTrainInfo.LC, train.TrainXW);
         } else {
-            int fzZmwz = Integer.parseInt(String.valueOf(firstCCItem.getExt2()));
-            int dzZmwz = Integer.parseInt(String.valueOf(lastCCItem.getExt2()));
-            mPJInfo = train.getPjdmStart() != 99999 ? getCoreZZCX().getPrice(train.getTrainName(), fzZmwz, dzZmwz, train.getPjdmStart(), train.getPjdmEnd(), getRq(), firstCCItem.getTs()) : getCoreZZCX().getPrice(fzZmwz, dzZmwz, firstCCItem.getCcwz());
+            int fzZmwz = Integer.valueOf(String.valueOf(firstCCItem.Ext2)).intValue();
+            int dzZmwz = Integer.valueOf(String.valueOf(lastCCItem.Ext2)).intValue();
+            mPJInfo = train.pjdmStart != 99999 ? getCoreZZCX().getPrice(train.TrainName, fzZmwz, dzZmwz, train.pjdmStart, train.pjdmEnd, getRq(), firstCCItem.TS) : getCoreZZCX().getPrice(fzZmwz, dzZmwz, firstCCItem.ccwz);
         }
-        simpleTrainInfo.setPj(mPJInfo);
-        simpleTrainInfo.setKsrq(train.getTrainKsrq());
-        simpleTrainInfo.setJsrq(train.getTrainJsrq());
-        simpleTrainInfo.setKxzq(train.getTrainKxzq());
-        simpleTrainInfo.setKxgl(train.getTrainKxgl());
-        simpleTrainInfo.setYxts(0);
-        simpleTrainInfo.setFzCCTKBlock(new CCTKBlock(getDataCenter().getCCTK().get(firstCCItem.getCctkWz())));
-        simpleTrainInfo.setDzCCTKBlock(new CCTKBlock(getDataCenter().getCCTK().get(lastCCItem.getCctkWz())));
-        simpleTrainInfo.setNoticeStart(train.getNoticeStart());
-        simpleTrainInfo.setNoticeEnd(train.getNoticeEnd());
-        simpleTrainInfo.setDdj(String.valueOf(train.getDdj()));
-        simpleTrainInfo.setTrainBJ(train.getTrainBJ());
-        simpleTrainInfo.setHcStart(train.getHcStart());
-        simpleTrainInfo.setHcEnd(train.getHcEnd());
-        simpleTrainInfo.setCaceStart(train.getCaceStart());
-        simpleTrainInfo.setCaceEnd(train.getCaceEnd());
+        simpleTrainInfo.PJ = mPJInfo;
+        simpleTrainInfo.ksrq = train.TrainKSRQ;
+        simpleTrainInfo.jsrq = train.TrainJSRQ;
+        simpleTrainInfo.kxzq = train.TrainKXZQ;
+        simpleTrainInfo.kxgl = train.TrainKXGL;
+        simpleTrainInfo.yxts = 0;
+        simpleTrainInfo.fzCCTKBlock = new CCTKBlock(getDataCenter().getCCTK().get(firstCCItem.cctkWz));
+        simpleTrainInfo.dzCCTKBlock = new CCTKBlock(getDataCenter().getCCTK().get(lastCCItem.cctkWz));
+        simpleTrainInfo.noticeStart = train.noticeStart;
+        simpleTrainInfo.noticeEnd = train.noticeEnd;
+        simpleTrainInfo.DDJ = String.valueOf(train.ddj);
+        simpleTrainInfo.trainBJ = train.TrainBJ;
+        simpleTrainInfo.hcStart = train.hcStart;
+        simpleTrainInfo.hcEnd = train.hcEnd;
+        simpleTrainInfo.caceStart = train.caceStart;
+        simpleTrainInfo.caceEnd = train.caceEnd;
         NoticeBlock noticeBlock = new NoticeBlock();
-        noticeBlock.setKsrq(simpleTrainInfo.getKsrq());
-        noticeBlock.setJsrq(simpleTrainInfo.getJsrq());
-        noticeBlock.setKxgl(simpleTrainInfo.getKxgl());
-        noticeBlock.setKxzq((byte) simpleTrainInfo.getKxzq());
-        noticeBlock.setDay((byte) simpleTrainInfo.getYxts());
-        simpleTrainInfo.setNoticeBlock(noticeBlock);
-        simpleTrainInfo.setBasicYunXingInfo(new YunXingInfo(train.getTrainKxzq(), train.getTrainKxgl(), train.getTrainKsrq(), train.getTrainJsrq()));
+        noticeBlock.setKsrq(simpleTrainInfo.ksrq);
+        noticeBlock.setJsrq(simpleTrainInfo.jsrq);
+        noticeBlock.setKxgl(simpleTrainInfo.kxgl);
+        noticeBlock.setKxzq((byte) simpleTrainInfo.kxzq);
+        noticeBlock.setDay((byte) simpleTrainInfo.yxts);
+        simpleTrainInfo.noticeBlock = noticeBlock;
+        simpleTrainInfo.setBasicYunXingInfo(new YunXingInfo(train.TrainKXZQ, train.TrainKXGL, train.TrainKSRQ, train.TrainJSRQ));
         return simpleTrainInfo;
     }
 
@@ -285,7 +290,6 @@ public class CCCXFactory {
     }
 
     public CoreZZCX getCoreZZCX() {
-
         return this.coreZZCX;
     }
 

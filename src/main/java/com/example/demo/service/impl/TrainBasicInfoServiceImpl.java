@@ -21,6 +21,9 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 
 import javax.annotation.Resource;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -45,17 +48,58 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
             60, TimeUnit.SECONDS, new LinkedBlockingDeque<>(),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
-    private OkHttpClient okHttpClient = new OkHttpClient.Builder()
+    /*private OkHttpClient okHttpClient = new OkHttpClient.Builder()
             //.addInterceptor(new AddCookiesInterceptor())
             .connectTimeout(1, TimeUnit.SECONDS)
             .retryOnConnectionFailure(true)
-            .readTimeout(2, TimeUnit.SECONDS).build();
+            .readTimeout(2, TimeUnit.SECONDS).build();*/
 
-    private static final String API_URL = "https://www.12306.cn";
+    public OkHttpClient getUnsafeOkHttpClient() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+            final javax.net.ssl.SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            OkHttpClient.Builder builder = new OkHttpClient.Builder();
+            builder.sslSocketFactory(sslSocketFactory);
+            builder.hostnameVerifier((hostname, session) -> true);
+
+            return builder
+                    .connectTimeout(2, TimeUnit.SECONDS)//设置连接超时时间
+                    .readTimeout(20, TimeUnit.SECONDS)//设置读取超时时间
+                    .retryOnConnectionFailure(true)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //private static final String API_URL = "https://www.12306.cn";
+    private static final String API_URL = "https://kyfw.12306.cn";
 
     private Retrofit retrofit =
             new Retrofit.Builder()
-                    .baseUrl(API_URL).callFactory(okHttpClient)
+                    .baseUrl(API_URL).callFactory(getUnsafeOkHttpClient())
                     .addConverterFactory(StringConvertFactory.create())
                     .build();
 
@@ -74,22 +118,22 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
             List<TrainInfo> trainInfoList = coreZZCX.query(trainBasicInfo.getDepartureStationName(), trainBasicInfo.getDestStationName(), Integer.parseInt(date));
             LOGGER.info("查询耗时 = {}", (System.currentTimeMillis() - start));
             for (TrainInfo trainInfo : trainInfoList) {
-                if (StringUtils.equals(trainBasicInfo.getDepartureStationName(), trainInfo.getFz()) && StringUtils.equals(trainBasicInfo.getDestStationName(), trainInfo.getDz())
-                        && StringUtils.equals(trainBasicInfo.getTrainNo(), trainInfo.getCc())) {
-                    PJInfo pjInfo = trainInfo.getPj();
+                if (StringUtils.equals(trainBasicInfo.getDepartureStationName(), trainInfo.FZ) && StringUtils.equals(trainBasicInfo.getDestStationName(), trainInfo.DZ)
+                        && StringUtils.equals(trainBasicInfo.getTrainNo(), trainInfo.CC)) {
+                    PJInfo pjInfo = trainInfo.PJ;
                     trainBasicInfo1 = new TrainBasicInfo();
                     trainBasicInfo1.setTrainNo(trainBasicInfo.getTrainNo());
-                    trainBasicInfo1.setStartStationName(trainInfo.getSfz());
-                    trainBasicInfo1.setEndStationName(trainInfo.getZdz());
-                    trainBasicInfo1.setDepartureStationName(trainInfo.getFz());
-                    trainBasicInfo1.setDestStationName(trainInfo.getDz());
-                    trainBasicInfo1.setDistance(trainInfo.getLc());
+                    trainBasicInfo1.setStartStationName(trainInfo.SFZ);
+                    trainBasicInfo1.setEndStationName(trainInfo.ZDZ);
+                    trainBasicInfo1.setDepartureStationName(trainInfo.FZ);
+                    trainBasicInfo1.setDestStationName(trainInfo.DZ);
+                    trainBasicInfo1.setDistance(trainInfo.LC);
                     trainBasicInfo1.setYdz(pjInfo.getYdz());
                     trainBasicInfo1.setEdz(pjInfo.getEdz());
                     trainBasicInfo1.setSwz(pjInfo.getSwz());
                     trainBasicInfo1.setTdz(pjInfo.getTdz());
-                    trainBasicInfo1.setRz(pjInfo.getRz());
-                    trainBasicInfo1.setYz(pjInfo.getYz());
+                    trainBasicInfo1.setRz(pjInfo.RZ);
+                    trainBasicInfo1.setYz(pjInfo.YZ);
                     // 查询不到
                     trainBasicInfo1.setGjrws(pjInfo.BLANK_PRICE);
                     // 查询不到
@@ -97,11 +141,11 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                     trainBasicInfo1.setDws(pjInfo.getDw());
                     trainBasicInfo1.setDwx(pjInfo.BLANK_PRICE);
                     if (StringUtils.startsWith(trainBasicInfo.getTrainNo(), "D")) {
-                        trainBasicInfo1.setYdws(pjInfo.getRws());
-                        trainBasicInfo1.setYdwx(pjInfo.getRwx());
-                        trainBasicInfo1.setEdws(pjInfo.getYws());
-                        trainBasicInfo1.setEdwz(pjInfo.getYwz());
-                        trainBasicInfo1.setEdwx(pjInfo.getYwx());
+                        trainBasicInfo1.setYdws(pjInfo.RWs);
+                        trainBasicInfo1.setYdwx(pjInfo.RWx);
+                        trainBasicInfo1.setEdws(pjInfo.YWs);
+                        trainBasicInfo1.setEdwz(pjInfo.YWz);
+                        trainBasicInfo1.setEdwx(pjInfo.YWx);
 
                         trainBasicInfo1.setRws(pjInfo.BLANK_PRICE);
                         trainBasicInfo1.setRwx(pjInfo.BLANK_PRICE);
@@ -115,14 +159,14 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                         trainBasicInfo1.setEdwz(pjInfo.BLANK_PRICE);
                         trainBasicInfo1.setEdwx(pjInfo.BLANK_PRICE);
 
-                        trainBasicInfo1.setRws(pjInfo.getRws());
-                        trainBasicInfo1.setRwx(pjInfo.getRwx());
-                        trainBasicInfo1.setYws(pjInfo.getYws());
-                        trainBasicInfo1.setYwz(pjInfo.getYwz());
-                        trainBasicInfo1.setYwx(pjInfo.getYwx());
+                        trainBasicInfo1.setRws(pjInfo.RWs);
+                        trainBasicInfo1.setRwx(pjInfo.RWx);
+                        trainBasicInfo1.setYws(pjInfo.YWs);
+                        trainBasicInfo1.setYwz(pjInfo.YWz);
+                        trainBasicInfo1.setYwx(pjInfo.YWx);
                     }
-                    trainBasicInfo1.setWz(pjInfo.getWz());
-                    trainBasicInfo1.setQt(pjInfo.getQt());
+                    trainBasicInfo1.setWz(pjInfo.WZ);
+                    trainBasicInfo1.setQt(pjInfo.QT);
                     trainBasicInfo1.setAddTime(new Date());
                     trainBasicInfo1.setUpdateTime(new Date());
                     trainBasicInfoMapper.insert(trainBasicInfo1);
@@ -189,7 +233,7 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                         long start = System.currentTimeMillis();
                                         String date = new SimpleDateFormat("yyyyMMdd").format(trainBasicInfo.getDepartureDate());
                                         List<TrainInfo> trainInfoList = coreZZCX.query(trainBasicInfo.getDepartureStationName(), trainBasicInfo.getDestStationName(), Integer.parseInt(date));
-                                        LOGGER.info("查询耗时 = {}", (System.currentTimeMillis() - start));
+                                        LOGGER.info("出发站 = {} 到达站 = {} 出发日期 = {} 查询耗时 = {}", trainBasicInfo.getDepartureStationName(), trainBasicInfo.getDestStationName(), Integer.parseInt(date), (System.currentTimeMillis() - start));
                                         if (CollectionUtils.isNotEmpty(trainInfoList)) {
                                             //LOGGER.info("查询参数 = {},结果 = {}", JacksonJsonUtils.toJson(trainBasicInfo), JacksonJsonUtils.toJson(trainInfoList));
                                             for (TrainInfo trainInfo : trainInfoList) {
@@ -199,18 +243,18 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                     LOGGER.warn("结束日期 {} 大于发车时间 {}", yunXingInfo.getJsrq(), date);
                                                     continue;
                                                 }
-                                                PJInfo pjInfo = trainInfo.getPj();
-                                                if (StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getYws())
-                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getYwz())
-                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getYwx())
-                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getRws())
-                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.getRwx())) {
+                                                PJInfo pjInfo = trainInfo.PJ;
+                                                if (StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.YWs)
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.YWz)
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.YWx)
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.RWs)
+                                                        && StringUtils.equals(pjInfo.BLANK_PRICE, pjInfo.RWx)) {
                                                     continue;
                                                 }
                                                 TrainBasicInfo query = new TrainBasicInfo();
-                                                query.setTrainNo(trainInfo.getCc());
-                                                query.setDepartureStationName(trainInfo.getFz());
-                                                query.setDestStationName(trainInfo.getDz());
+                                                query.setTrainNo(trainInfo.CC);
+                                                query.setDepartureStationName(trainInfo.FZ);
+                                                query.setDestStationName(trainInfo.DZ);
                                                 try {
                                                     query.setDepartureDate(DateUtils.parseDate(date, "yyyyMMdd"));
                                                 } catch (Exception e) {
@@ -218,19 +262,19 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                 }
                                                 TrainBasicInfo result = trainBasicInfoMapper.selectOne(query);
                                                 TrainBasicInfo trainBasicInfo1 = new TrainBasicInfo();
-                                                trainBasicInfo1.setTrainNo(trainInfo.getCc());
-                                                trainBasicInfo1.setStartStationName(trainInfo.getSfz());
-                                                trainBasicInfo1.setEndStationName(trainInfo.getZdz());
-                                                trainBasicInfo1.setDepartureStationName(trainInfo.getFz());
-                                                trainBasicInfo1.setDestStationName(trainInfo.getDz());
+                                                trainBasicInfo1.setTrainNo(trainInfo.CC);
+                                                trainBasicInfo1.setStartStationName(trainInfo.SFZ);
+                                                trainBasicInfo1.setEndStationName(trainInfo.ZDZ);
+                                                trainBasicInfo1.setDepartureStationName(trainInfo.FZ);
+                                                trainBasicInfo1.setDestStationName(trainInfo.DZ);
                                                 trainBasicInfo1.setDepartureDate(trainBasicInfo.getDepartureDate());
-                                                trainBasicInfo1.setDistance(trainInfo.getLc());
+                                                trainBasicInfo1.setDistance(trainInfo.LC);
                                                 trainBasicInfo1.setYdz(pjInfo.getYdz());
                                                 trainBasicInfo1.setEdz(pjInfo.getEdz());
                                                 trainBasicInfo1.setSwz(pjInfo.getSwz());
                                                 trainBasicInfo1.setTdz(pjInfo.getTdz());
-                                                trainBasicInfo1.setRz(pjInfo.getRz());
-                                                trainBasicInfo1.setYz(pjInfo.getYz());
+                                                trainBasicInfo1.setRz(pjInfo.RZ);
+                                                trainBasicInfo1.setYz(pjInfo.YZ);
                                                 // 查询不到
                                                 trainBasicInfo1.setGjrws(pjInfo.BLANK_PRICE);
                                                 // 查询不到
@@ -238,11 +282,11 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                 trainBasicInfo1.setDws(pjInfo.getDw());
                                                 trainBasicInfo1.setDwx(pjInfo.BLANK_PRICE);
                                                 if (StringUtils.startsWith(trainBasicInfo1.getTrainNo(), "D")) {
-                                                    trainBasicInfo1.setYdws(pjInfo.getRws());
-                                                    trainBasicInfo1.setYdwx(pjInfo.getRwx());
-                                                    trainBasicInfo1.setEdws(pjInfo.getYws());
-                                                    trainBasicInfo1.setEdwz(pjInfo.getYwz());
-                                                    trainBasicInfo1.setEdwx(pjInfo.getYwx());
+                                                    trainBasicInfo1.setYdws(pjInfo.RWs);
+                                                    trainBasicInfo1.setYdwx(pjInfo.RWx);
+                                                    trainBasicInfo1.setEdws(pjInfo.YWs);
+                                                    trainBasicInfo1.setEdwz(pjInfo.YWz);
+                                                    trainBasicInfo1.setEdwx(pjInfo.YWx);
 
                                                     trainBasicInfo1.setRws(pjInfo.BLANK_PRICE);
                                                     trainBasicInfo1.setRwx(pjInfo.BLANK_PRICE);
@@ -256,14 +300,14 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                     trainBasicInfo1.setEdwz(pjInfo.BLANK_PRICE);
                                                     trainBasicInfo1.setEdwx(pjInfo.BLANK_PRICE);
 
-                                                    trainBasicInfo1.setRws(pjInfo.getRws());
-                                                    trainBasicInfo1.setRwx(pjInfo.getRwx());
-                                                    trainBasicInfo1.setYws(pjInfo.getYws());
-                                                    trainBasicInfo1.setYwz(pjInfo.getYwz());
-                                                    trainBasicInfo1.setYwx(pjInfo.getYwx());
+                                                    trainBasicInfo1.setRws(pjInfo.RWs);
+                                                    trainBasicInfo1.setRwx(pjInfo.RWx);
+                                                    trainBasicInfo1.setYws(pjInfo.YWs);
+                                                    trainBasicInfo1.setYwz(pjInfo.YWz);
+                                                    trainBasicInfo1.setYwx(pjInfo.YWx);
                                                 }
-                                                trainBasicInfo1.setWz(pjInfo.getWz());
-                                                trainBasicInfo1.setQt(pjInfo.getQt());
+                                                trainBasicInfo1.setWz(pjInfo.WZ);
+                                                trainBasicInfo1.setQt(pjInfo.QT);
                                                 trainBasicInfo1.setUpdateTime(new Date());
 
                                                 if (result == null) {
@@ -276,7 +320,7 @@ public class TrainBasicInfoServiceImpl implements ITrainBasicInfoService {
                                                 }
                                             }
                                         } else {
-                                            //LOGGER.info("查询结果为空,参数 = {}", JacksonJsonUtils.toJson(trainBasicInfo));
+                                            LOGGER.info("查询结果为空,参数 = {}", JacksonJsonUtils.toJson(trainBasicInfo));
                                         }
                                     }
                                 }

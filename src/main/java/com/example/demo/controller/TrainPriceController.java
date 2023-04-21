@@ -27,6 +27,11 @@ public class TrainPriceController {
         return trainBasicInfoService.selectOne(trainBasicInfo);
     }
 
+    /**
+     * http://localhost:8080/loadAll
+     *
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/loadAll")
     public String loadAll() {
         trainBasicInfoService.queryAllAndSave();

@@ -56,15 +56,10 @@ public class DataCenter {
         reset();
     }
 
-    /**
-     * 中文车站名
-     *
-     * @return
-     */
     public List<String> getZMHZSY1() {
         if (this.dataLoader_zmhzsy1 == null) {
             try {
-                this.dataLoader_zmhzsy1 = iOFactory.dataloader_line("zmhzsy1.txt", 3500);
+                this.dataLoader_zmhzsy1 = getIOFactory().dataloader_line("zmhzsy1.txt", 3500);
             } catch (Exception e) {
             }
         }
@@ -73,7 +68,7 @@ public class DataCenter {
 
     public ArrayList[] getZM() {
         if (this.dataLoader_zm == null) {
-            this.dataLoader_zm = iOFactory.dataloader_utf("zm.txt", new int[]{5, 4}, new int[]{0, 1}, 5000);
+            this.dataLoader_zm = getIOFactory().dataloader_utf("zm.txt", new int[]{5, 4}, new int[]{0, 1}, 5000);
         }
         return this.dataLoader_zm;
     }
@@ -110,22 +105,17 @@ public class DataCenter {
     public List<String> getCC() {
         if (this.dataLoader_cc == null) {
             try {
-                this.dataLoader_cc = iOFactory.dataloader_line("cc.idx", 4500);
+                this.dataLoader_cc = getIOFactory().dataloader_line("cc.idx", 4500);
             } catch (Exception e) {
             }
         }
         return this.dataLoader_cc;
     }
 
-    /**
-     * 车次数据
-     *
-     * @return
-     */
     public List<byte[]> getCCData() {
         if (this.dataLoader_ccData == null) {
             try {
-                this.dataLoader_ccData = iOFactory.dataloader_binary_BlockRead("cc.dat", 62);
+                this.dataLoader_ccData = getIOFactory().dataloader_binary_BlockRead("cc.dat", 62);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -135,7 +125,7 @@ public class DataCenter {
 
     public ArrayList[] getCCDZZM() {
         if (this.dataLoader_ccdzzm == null) {
-            this.dataLoader_ccdzzm = iOFactory.dataloader_utf("ccdzzm.txt", new int[]{5, 5}, new int[]{0, 1}, 5000);
+            this.dataLoader_ccdzzm = getIOFactory().dataloader_utf("ccdzzm.txt", new int[]{5, 5}, new int[]{0, 1}, 5000);
         }
         return this.dataLoader_ccdzzm;
     }
@@ -143,7 +133,7 @@ public class DataCenter {
     public List<byte[]> getCCTK() {
         if (this.bts_cctk == null) {
             try {
-                this.bts_cctk = iOFactory.dataloader_binary_BlockRead("cctk.dat", 12);
+                this.bts_cctk = getIOFactory().dataloader_binary_BlockRead("cctk.dat", 12);
             } catch (Exception e) {
             }
         }
@@ -152,42 +142,42 @@ public class DataCenter {
 
     public ArrayList[] getCCDZ() {
         if (this.dataLoader_ccdz == null) {
-            this.dataLoader_ccdz = iOFactory.dataloader_binary("ccdz.dat", new int[]{1, 0});
+            this.dataLoader_ccdz = getIOFactory().dataloader_binary("ccdz.dat", new int[]{1, 0});
         }
         return this.dataLoader_ccdz;
     }
 
     public ArrayList[] getCCSY() {
         if (this.dataLoader_ccsy == null) {
-            this.dataLoader_ccsy = iOFactory.dataloader_binary("ccsy.dat", new int[]{1, 1, 1, 1});
+            this.dataLoader_ccsy = getIOFactory().dataloader_binary("ccsy.dat", new int[]{1, 1, 1, 1});
         }
         return this.dataLoader_ccsy;
     }
 
     public ArrayList[] getCCTKSY() {
         if (this.dataLoader_cctksy == null) {
-            this.dataLoader_cctksy = iOFactory.dataloader_binary("cctksy.dat", new int[]{1});
+            this.dataLoader_cctksy = getIOFactory().dataloader_binary("cctksy.dat", new int[]{1});
         }
         return this.dataLoader_cctksy;
     }
 
     public ArrayList[] getZMHZSY2() {
         if (this.dataLoader_zmhzsy2 == null) {
-            this.dataLoader_zmhzsy2 = iOFactory.dataloader_binary("zmhzsy2.dat", new int[]{1, 1, 1, 1, 1, 1});
+            this.dataLoader_zmhzsy2 = getIOFactory().dataloader_binary("zmhzsy2.dat", new int[]{1, 1, 1, 1, 1, 1, 0});
         }
         return this.dataLoader_zmhzsy2;
     }
 
     public ArrayList[] getZMSY() {
         if (this.dataLoader_zmsy == null) {
-            this.dataLoader_zmsy = iOFactory.dataloader_binary("zmsy.dat", new int[]{0, 0});
+            this.dataLoader_zmsy = getIOFactory().dataloader_binary("zmsy.dat", new int[]{0, 0});
         }
         return this.dataLoader_zmsy;
     }
 
     public ArrayList[] getPJDM() {
         if (this.dataLoader_pjdm == null) {
-            this.dataLoader_pjdm = iOFactory.dataloader_binary("pjdm.dat", new int[]{1, 1, 2, 1, 2, 1});
+            this.dataLoader_pjdm = getIOFactory().dataloader_binary("pjdm.dat", new int[]{1, 1, 2, 1, 2, 1});
         }
         return this.dataLoader_pjdm;
     }
@@ -196,7 +186,7 @@ public class DataCenter {
         if (this.ddjs == null) {
             try {
                 this.ddjs = new HashMap<>();
-                JSONArray jsonArray = new JSONArray(Common.readFile(iOFactory.getInpustStream("000_ddj.json"), "UTF-8"));
+                JSONArray jsonArray = new JSONArray(Common.readFile(getIOFactory().getInpustStream("000_ddj.json"), "UTF-8"));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject json = jsonArray.optJSONObject(i);
                     this.ddjs.put(json.optString("k"), json.optString("v"));
@@ -211,7 +201,7 @@ public class DataCenter {
         if (this.stationLocations == null) {
             try {
                 this.stationLocations = new HashMap<>();
-                JSONArray jsonArray = new JSONArray(Common.readFile(iOFactory.getInpustStream("station_poi.json"), "UTF-8"));
+                JSONArray jsonArray = new JSONArray(Common.readFile(getIOFactory().getInpustStream("station_poi.json"), "UTF-8"));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject json = jsonArray.optJSONObject(i);
                     this.stationLocations.put(json.optString("n"), json.optString("l"));
@@ -301,13 +291,13 @@ public class DataCenter {
         int tmpZMWZ = buffer.getShort();
         int tmpKSRQ = buffer.getInt();
         int tmpJSRQ = buffer.getInt();
-        if (!String.format("%d%d", ccwz, zmwz).equals(String.format("%s%s", tmpCCWZ, tmpZMWZ)) || rq < tmpKSRQ || rq > tmpJSRQ) {
+        if (!String.format("%d%d", Integer.valueOf(ccwz), Integer.valueOf(zmwz)).equals(String.format("%s%s", Integer.valueOf(tmpCCWZ), Integer.valueOf(tmpZMWZ))) || rq < tmpKSRQ || rq > tmpJSRQ) {
             return false;
         }
         return true;
     }
 
-    public String getCaceInfo(int rq, int start, int end) {
+    public String getCaceInfo(int rq, int start, int end) throws Exception {
         for (int i = start; i <= end; i++) {
             ByteBuffer buffer = ByteBuffer.wrap(getCace1().get(i));
             int rqStart = buffer.getInt();
@@ -320,6 +310,10 @@ public class DataCenter {
         return null;
     }
 
+    public IOFactory getIOFactory() {
+        return iOFactory;
+    }
+
     public String getDefaultDataPath() {
         return this.defaultDataPath;
     }
@@ -327,7 +321,6 @@ public class DataCenter {
     public void setDefaultDataPath(String defaultDataPath) {
         this.defaultDataPath = defaultDataPath;
     }
-
 
     public boolean isAssetsMode() {
         return this.assetsMode;
@@ -340,7 +333,7 @@ public class DataCenter {
     public List<String> getCace2() {
         if (this.dataLoader_cace2 == null) {
             try {
-                this.dataLoader_cace2 = iOFactory.dataloader_line("cace2.dat", 3500);
+                this.dataLoader_cace2 = getIOFactory().dataloader_line("cace2.dat", 3500);
             } catch (Exception e) {
             }
         }
@@ -350,7 +343,7 @@ public class DataCenter {
     public List<byte[]> getCace1() {
         if (this.dataLoader_cace1 == null) {
             try {
-                this.dataLoader_cace1 = iOFactory.dataloader_binary_BlockRead("cace1.dat", 8);
+                this.dataLoader_cace1 = getIOFactory().dataloader_binary_BlockRead("cace1.dat", 8);
             } catch (Exception e) {
             }
         }
@@ -402,7 +395,4 @@ public class DataCenter {
         this.stationLocations = null;
     }
 
-    public IOFactory getiOFactory() {
-        return iOFactory;
-    }
 }

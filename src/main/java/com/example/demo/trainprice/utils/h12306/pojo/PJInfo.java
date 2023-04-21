@@ -1,46 +1,25 @@
 package com.example.demo.trainprice.utils.h12306.pojo;
 
 
-import org.apache.commons.lang3.StringUtils;
-
+import org.apache.http.util.TextUtils;
 
 public class PJInfo {
     public final String BLANK_PRICE = "—";
-
-    /**
-     * 硬座
-     */
-    private String yz = "—";
-
-    /**
-     * 软座
-     */
-    private String rz = "—";
-
-    /**
-     * 硬卧上
-     */
-    private String yws = "—";
-
-    /**
-     * 硬卧中
-     */
-    private String ywz = "—";
-
-    /**
-     * 硬卧下
-     */
-    private String ywx = "—";
-
-    /**
-     * 软卧上
-     */
-    private String rws = "—";
-
-    /**
-     * 软卧下
-     */
-    private String rwx = "—";
+    public String YZ = "—";
+    public String RZ = "—";
+    public String YWs = "—";
+    public String YWz = "—";
+    public String YWx = "—";
+    public String RWs = "—";
+    public String RWx = "—";
+    public String YD = "—";
+    public String ED = "—";
+    public String TD = "—";
+    public String GR = "—";
+    public String SW = "—";
+    public String WZ = "—";
+    public String QT = "—";
+    public String DW = "—";
 
     /**
      * 一等座
@@ -58,85 +37,152 @@ public class PJInfo {
     private String tdz = "—";
 
     /**
-     * 高级软卧
-     */
-    private String gjrw = "—";
-
-    /**
      * 商务座
      */
     private String swz = "—";
-
-    /**
-     * 无座
-     */
-    private String wz = "—";
-
-    /**
-     * 其他
-     */
-    private String qt = "—";
 
     /**
      * 动卧
      */
     private String dw = "—";
 
-    public String getYz() {
-        return yz;
+    public String getYZ() {
+        return this.YZ;
     }
 
-    public void setYz(String yz) {
-        this.yz = yz;
+    public void setYZ(String yZ) {
+        this.YZ = yZ;
     }
 
-    public String getRz() {
-        return rz;
+    public String getRZ() {
+        return this.RZ;
     }
 
-    public void setRz(String rz) {
-        this.rz = rz;
+    public void setRZ(String rZ) {
+        this.RZ = rZ;
     }
 
-    public String getYws() {
-        return yws;
+    public String getYWs() {
+        return this.YWs;
     }
 
-    public void setYws(String yws) {
-        this.yws = yws;
+    public void setYWs(String yWs) {
+        this.YWs = yWs;
     }
 
-    public String getYwz() {
-        return ywz;
+    public String getYWz() {
+        return this.YWz;
     }
 
-    public void setYwz(String ywz) {
-        this.ywz = ywz;
+    public void setYWz(String yWz) {
+        this.YWz = yWz;
     }
 
-    public String getYwx() {
-        return ywx;
+    public String getYWx() {
+        return this.YWx;
     }
 
-    public void setYwx(String ywx) {
-        this.ywx = ywx;
+    public void setYWx(String yWx) {
+        this.YWx = yWx;
     }
 
-    public String getRws() {
-        return rws;
+    public String getRWs() {
+        return this.RWs;
     }
 
-    public void setRws(String rws) {
-        this.rws = rws;
+    public void setRWs(String rWs) {
+        this.RWs = rWs;
     }
 
-    public String getRwx() {
-        return rwx;
+    public String getRWx() {
+        return this.RWx;
     }
 
-    public void setRwx(String rwx) {
-        this.rwx = rwx;
+    public void setRWx(String rWx) {
+        this.RWx = rWx;
     }
+
+    public String getYD() {
+        return this.YD;
+    }
+
+    public void setYD(String yD) {
+        this.YD = yD;
+    }
+
+    public String getED() {
+        return this.ED;
+    }
+
+    public void setED(String eD) {
+        this.ED = eD;
+    }
+
+    public String getTD() {
+        return this.TD;
+    }
+
+    public void setTD(String tD) {
+        this.TD = tD;
+    }
+
+    public String getGR() {
+        return this.GR;
+    }
+
+    public void setGR(String gR) {
+        this.GR = gR;
+    }
+
+    public String getSW() {
+        return this.SW;
+    }
+
+    public void setSW(String sW) {
+        this.SW = sW;
+    }
+
+    public String getWZ() {
+        return this.WZ;
+    }
+
+    public void setWZ(String wZ) {
+        this.WZ = wZ;
+    }
+
+    public String getQT() {
+        return this.QT;
+    }
+
+    public void setQT(String qT) {
+        this.QT = qT;
+    }
+
+    public String getDW() {
+        return this.DW;
+    }
+
+    public void setDW(String dW) {
+        this.DW = dW;
+    }
+
+    public String getLowestPrice() {
+        if (!isBlankPrice(getYZ())) {
+            return getYZ();
+        }
+        if (!isBlankPrice(getED())) {
+            return getED();
+        }
+        if (!isBlankPrice(getYWs())) {
+            return getYWs();
+        }
+        return getRWs();
+    }
+
+    private boolean isBlankPrice(String str) {
+        return str == null || "—".equals(str) || TextUtils.isEmpty(str);
+    }
+
 
     public String getYdz() {
         return ydz;
@@ -162,36 +208,12 @@ public class PJInfo {
         this.tdz = tdz;
     }
 
-    public String getGjrw() {
-        return gjrw;
-    }
-
-    public void setGjrw(String gjrw) {
-        this.gjrw = gjrw;
-    }
-
     public String getSwz() {
         return swz;
     }
 
     public void setSwz(String swz) {
         this.swz = swz;
-    }
-
-    public String getWz() {
-        return wz;
-    }
-
-    public void setWz(String wz) {
-        this.wz = wz;
-    }
-
-    public String getQt() {
-        return qt;
-    }
-
-    public void setQt(String qt) {
-        this.qt = qt;
     }
 
     public String getDw() {
@@ -202,25 +224,9 @@ public class PJInfo {
         this.dw = dw;
     }
 
-    public String getLowestPrice() {
-        if (!isBlankPrice(getYz())) {
-            return getYz();
-        }
-        if (!isBlankPrice(getEdz())) {
-            return getEdz();
-        }
-        if (!isBlankPrice(getYws())) {
-            return getYws();
-        }
-        return getRws();
-    }
-
-    private boolean isBlankPrice(String str) {
-
-        return str == null || "—".equals(str) || StringUtils.isEmpty(str);
-    }
-
+    @Override
     public String toString() {
-        return "PJInfo{BLANK_PRICE='—', yz='" + this.yz + "', rz='" + this.rz + "', yws='" + this.yws + "', ywz='" + this.ywz + "', ywx='" + this.ywx + "', rws='" + this.rws + "', rwx='" + this.rwx + "', ydz='" + this.ydz + "', edz='" + this.edz + "', tdz='" + this.tdz + "', gjrw='" + this.gjrw + "', swz='" + this.swz + "', wz='" + this.wz + "', qt='" + this.qt + "', dw='" + this.dw + "'}";
+        return "PJInfo{BLANK_PRICE='—', YZ='" + this.YZ + "', RZ='" + this.RZ + "', YWs='" + this.YWs + "', YWz='" + this.YWz + "', YWx='" + this.YWx + "', RWs='" + this.RWs + "', RWx='" + this.RWx + "', YD='" + this.YD + "', ED='" + this.ED + "', TD='" + this.TD + "', GR='" + this.GR + "', SW='" + this.SW + "', WZ='" + this.WZ + "', QT='" + this.QT + "', DW='" + this.DW + "'}";
     }
+
 }

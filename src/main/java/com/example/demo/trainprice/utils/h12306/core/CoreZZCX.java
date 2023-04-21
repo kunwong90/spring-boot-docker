@@ -1,6 +1,9 @@
 package com.example.demo.trainprice.utils.h12306.core;
 
 
+import com.example.demo.trainprice.utils.h12306.MediaEventListener;
+import com.example.demo.trainprice.utils.h12306.NotificationManagerCompat;
+import com.example.demo.trainprice.utils.h12306.TTAdConstant;
 import com.example.demo.trainprice.utils.h12306.datacenter.DataCenter;
 import com.example.demo.trainprice.utils.h12306.pojo.*;
 import com.example.demo.trainprice.utils.h12306.utils.Common;
@@ -34,7 +37,6 @@ public class CoreZZCX {
 
     public double[] CountPJ(int lcx) {
         double[] RePJ = new double[2];
-        // 计费里程
         this.jflc = 0;
         double jbpj = 0.0d;
         if (lcx <= 200) {
@@ -50,9 +52,9 @@ public class CoreZZCX {
         if (lcx <= 200) {
             this.jflc = (((lcx - 1) / 10) * 10) + 5;
         } else if (lcx >= 201 && lcx <= 400) {
-            this.jflc = (((lcx - 201) / 20) * 20) + 210;
+            this.jflc = (((lcx - 201) / 20) * 20) + MediaEventListener.EVENT_VIDEO_READY;
         } else if (lcx >= 401 && lcx <= 700) {
-            this.jflc = (((lcx - 401) / 30) * 30) + 415;
+            this.jflc = (((lcx - 401) / 30) * 30) + TTAdConstant.VIDEO_COVER_URL_CODE;
         } else if (lcx >= 701 && lcx <= 1100) {
             this.jflc = (((lcx - 701) / 40) * 40) + 720;
         } else if (lcx >= 1101 && lcx <= 1600) {
@@ -79,7 +81,7 @@ public class CoreZZCX {
             jbpj = ((i2 - 500) * 0.05861d * 0.8d) + 27.5476d;
         }
         if (i2 >= 1001 && i2 <= 1500) {
-            jbpj = ((i2 - 1000) * 0.05861d * 0.7d) + 50.9907d;
+            jbpj = ((i2 + NotificationManagerCompat.IMPORTANCE_UNSPECIFIED) * 0.05861d * 0.7d) + 50.9907d;
         }
         if (i2 >= 1501 && i2 <= 2500) {
             jbpj = ((i2 - 1500) * 0.05861d * 0.6d) + 71.5042d;
@@ -100,15 +102,6 @@ public class CoreZZCX {
         return RePJ;
     }
 
-    /**
-     * @param lcdj
-     * @param pjsf
-     * @param sfkt     是否空调
-     * @param JcJb
-     * @param distance 距离
-     * @param ZXBS
-     * @return
-     */
     public PJInfo CountSJPJ(int lcdj, int pjsf, boolean sfkt, double[] JcJb, int distance, String ZXBS) {
         double JBPJ_R;
         PJInfo RET;
@@ -117,17 +110,16 @@ public class CoreZZCX {
         double KT;
         double JBPJ;
         double JBPJ_R2;
-        double jk;
-        PJInfo pjResult;
+        double JK;
+        PJInfo RET3;
+        int ZPJ;
         Object obj;
         double ed;
         double yd;
         double d;
         double d2;
-        // 加快票价
-        double jk2 = 0.0d;
-        // 空调票价
-        double kt2 = 0.0d;
+        double JK2 = 0.0d;
+        double KT2 = 0.0d;
         PJInfo RET4 = new PJInfo();
         double JBPJ2 = JcJb[0];
         if (distance >= 20) {
@@ -137,19 +129,18 @@ public class CoreZZCX {
         }
         if (lcdj != 52) {
             if (distance < 130) {
-                jk2 = 1.0d;
+                JK2 = 1.0d;
             } else {
-                jk2 = Math.round(JcJb[1] * 0.2d);
+                JK2 = Math.round(JcJb[1] * 0.2d);
             }
         }
         if (sfkt) {
             if (distance < 100) {
-                kt2 = 1.0d;
+                KT2 = 1.0d;
             } else {
-                kt2 = Math.rint(JcJb[1] * 0.25d);
+                KT2 = Math.rint(JcJb[1] * 0.25d);
             }
         }
-        // 卧铺 0:硬卧上;1:硬卧中;2:硬卧下;3:软卧上;4:软卧下
         double[] wp2 = new double[5];
         if (distance >= 400) {
             wp2[0] = Math.round(JcJb[1] * 1.1d);
@@ -169,10 +160,10 @@ public class CoreZZCX {
         if (pjsf == 1) {
             RET2 = RET;
             wp = wp2;
-            KT = kt2;
+            KT = KT2;
             JBPJ = JBPJ2;
             JBPJ_R2 = JBPJ_R;
-            jk = jk2;
+            JK = JK2;
         } else {
             float sf = (pjsf / 100.0f) + 1.0f;
             RET2 = RET;
@@ -186,60 +177,60 @@ public class CoreZZCX {
                 wp2 = wp3;
             }
             wp = wp2;
-            double JK3 = Math.round(sf * jk2);
+            double JK3 = Math.round(sf * JK2);
             if (lcdj != 51) {
                 JK3 = Math.round(JK3 * 2.0d);
             }
-            KT = Math.round(sf * kt2);
+            KT = Math.round(sf * KT2);
             JBPJ = JBPJ3;
             JBPJ_R2 = JBPJ_R3;
-            jk = JK3;
+            JK = JK3;
         }
-        int ZPJ2 = (int) Math.round(JBPJ + jk + KT);
-        int ZPJ_R = (int) Math.round(JBPJ_R2 + jk + KT);
-        // 候车室空调费
+        int ZPJ2 = (int) Math.round(JBPJ + JK + KT);
+        int ZPJ_R = (int) Math.round(JBPJ_R2 + JK + KT);
         int hckt = distance > 200 ? 1 : 0;
         int ZPJ3 = ZPJ2 + hckt;
-        double kcbxf = getNewBxf(this.bxf);
+        double kcbxf = getNewBxf(this.bxf, this.jflc, sfkt, lcdj);
         if (JBPJ > 5.0d) {
             int ZPJ4 = ZPJ3 + 1;
-            pjResult = RET2;
-            pjResult.setYz(getNumberFormat().format(ZPJ4 - kcbxf));
-
+            RET3 = RET2;
+            RET3.YZ = getNumberFormat().format(ZPJ4 - kcbxf);
+            ZPJ = ZPJ4;
         } else {
-            pjResult = RET2;
-            pjResult.setYz(getNumberFormat().format((ZPJ3 + 0.5d) - kcbxf));
-
+            RET3 = RET2;
+            RET3.YZ = getNumberFormat().format((ZPJ3 + 0.5d) - kcbxf);
+            ZPJ = ZPJ3;
         }
         if (JBPJ_R2 > 5.0d) {
             ZPJ_R++;
-            pjResult.setRz(getNumberFormat().format(ZPJ_R - kcbxf));
+            RET3.RZ = getNumberFormat().format(ZPJ_R - kcbxf);
         } else {
-            pjResult.setRz(getNumberFormat().format((ZPJ_R + 0.5d) - kcbxf));
+            RET3.RZ = getNumberFormat().format((ZPJ_R + 0.5d) - kcbxf);
         }
         int[] plus = new int[4];
         int i2 = 0;
-        for (int i3 = 4; i2 < i3; ) {
+        for (int i3 = 4; i2 < i3; i3 = 4) {
             String ps = ZXBS.substring(i2, i2 + 1);
             plus[i2] = Integer.parseInt(ps);
             i2++;
         }
-        pjResult.setYdz("—");
-        pjResult.setEdz("—");
+        RET3.YD = "—";
+        RET3.ED = "—";
         String fck = Integer.toBinaryString(plus[1]);
         int slen = fck.length();
         StringBuilder zr = new StringBuilder();
         int ZPJ5 = 0;
         while (true) {
-            double JK4 = jk;
+            double JK4 = JK;
             if (ZPJ5 >= 3 - slen) {
                 break;
             }
             zr.append("0");
             ZPJ5++;
-            jk = JK4;
+            JK = JK4;
         }
-        String fck2 = zr.append(fck).toString();
+        zr.append(fck);
+        String fck2 = zr.toString();
         if (fck2.substring(0, 1).equals("0")) {
             obj = "0";
         } else {
@@ -256,7 +247,12 @@ public class CoreZZCX {
                 } else if (lcdj == 71) {
                     obj = "0";
                 } else {
+                    double d4 = this.bxf;
+                    double yd4 = (distance * 0.2796d) + d4;
                     obj = "0";
+                    double d5 = d4 + (distance * 0.233d);
+                    yd = yd4;
+                    ed = d5;
                 }
                 double d6 = this.bxf;
                 double yd5 = (distance * 0.48d * 1.2d) + d6;
@@ -272,58 +268,71 @@ public class CoreZZCX {
             }
             double yd6 = d2;
             double ed2 = ed <= 5.0d ? ed + d : 1.0d + ed;
-            pjResult.setYdz(String.format("%s", Math.round(Math.round(yd6) - kcbxf)));
-            pjResult.setEdz(String.format("%s", Math.round(Math.round(ed2) - kcbxf)));
+            RET3.YD = String.format("%s", Long.valueOf(Math.round(Math.round(yd6) - kcbxf)));
+            RET3.ED = String.format("%s", Long.valueOf(Math.round(Math.round(ed2) - kcbxf)));
         }
-        pjResult.setYws("—");
-        pjResult.setYwz("—");
-        pjResult.setYwx("—");
+        RET3.YWs = "—";
+        RET3.YWz = "—";
+        RET3.YWx = "—";
         if (plus[2] != 0) {
-            // 硬座票价
-            double YZPJ = Double.parseDouble(pjResult.getYz());
-            pjResult.setYws(getNumberFormat().format(wp[0] + YZPJ + 10.0d));
-            pjResult.setYwz(getNumberFormat().format(wp[1] + YZPJ + 10.0d));
-            pjResult.setYwx(getNumberFormat().format(wp[2] + YZPJ + 10.0d));
+            double YZPJ = Double.parseDouble(RET3.YZ);
+            RET3.YWs = getNumberFormat().format(wp[0] + YZPJ + 10.0d);
+            RET3.YWz = getNumberFormat().format(wp[1] + YZPJ + 10.0d);
+            RET3.YWx = getNumberFormat().format(wp[2] + YZPJ + 10.0d);
         }
-        pjResult.setRws("—");
-        pjResult.setRwx("—");
+        RET3.RWs = "—";
+        RET3.RWx = "—";
         if (plus[3] != 0) {
-            // 软座票价
-            double rzpj = Double.parseDouble(pjResult.getRz());
-            pjResult.setRws(getNumberFormat().format(wp[3] + rzpj + 10.0d));
-            pjResult.setRwx(getNumberFormat().format(wp[4] + rzpj + 10.0d));
+            double RZPJ = Double.parseDouble(RET3.RZ);
+            RET3.RWs = getNumberFormat().format(wp[3] + RZPJ + 10.0d);
+            RET3.RWx = getNumberFormat().format(wp[4] + RZPJ + 10.0d);
         }
         if (plus[0] == 0) {
-            pjResult.setYz("—");
+            RET3.YZ = "—";
         }
         if (fck2.substring(2, 3).equals(obj)) {
-            pjResult.setRz("—");
+            RET3.RZ = "—";
         }
-        return pjResult;
+        return RET3;
     }
 
-    public int getZMWZByName(String zm) {
-        return dataCenter.getZMHZSY1().indexOf(zm);
+    public short getZMWZByName(String zm) {
+        return (short) getDataCenter().getZMHZSY1().indexOf(zm);
     }
 
     public int[] getstation(String CHstation, int SearchType) {
-        int[] ReSE = {0, 0, 0, 0};
+        int[] ReSE = {0, 0, 0, 0, 0, 0, 0};
         String strReturn = CHstation.trim();
         int zw = getZMWZByName(strReturn);
         if (zw < 0) {
             return ReSE;
         }
         int[] ReSE2 = getstationSE(zw);
-        return ReSE2;
+        return SearchType >= 1 ? ReSE2 : ReSE2;
     }
 
-    public HashSet<Short> getCHstationIdxs_zmhzsy1(String CHstation) {
+    public HashSet<Short> getSameCityStations(int mainStationIdx) {
+        HashSet<Short> hashSet = new HashSet<>();
+        int size = getDataCenter().getZMHZSY2()[6].size();
+        for (Short i = (short) 0; i.shortValue() < size; i = Short.valueOf((short) (i.shortValue() + 1))) {
+            if (mainStationIdx == ((Short) getDataCenter().getZMHZSY2()[6].get(i.shortValue())).shortValue()) {
+                hashSet.add(i);
+            }
+        }
+        return hashSet;
+    }
+
+    public Short getMainStation(int stationIdx) {
+        return (Short) getDataCenter().getZMHZSY2()[6].get(stationIdx);
+    }
+
+    public HashSet<Short> getCHstationIdxs_zmhzsy1x111111111111(String CHstation) {
         HashSet<Short> result = null;
         int zw = getZMWZByName(CHstation);
         if (zw >= 0) {
             result = new HashSet<>();
             for (int i = 0; i < 5; i++) {
-                String newCHstation = dataCenter.getZMHZSY1().get(zw);
+                String newCHstation = getDataCenter().getZMHZSY1().get(zw);
                 if (!newCHstation.startsWith(CHstation)) {
                     break;
                 }
@@ -335,19 +344,20 @@ public class CoreZZCX {
     }
 
     public int[] getstationSE(int pos) {
-        int[] ReSE = {(Integer) dataCenter.getZMHZSY2()[0].get(pos), (Integer) dataCenter.getZMHZSY2()[1].get(pos), (Integer) dataCenter.getZMHZSY2()[2].get(pos), (Integer) dataCenter.getZMHZSY2()[3].get(pos), (Integer) dataCenter.getZMHZSY2()[4].get(pos), (Integer) dataCenter.getZMHZSY2()[5].get(pos)};
+        int[] ReSE = {((Integer) getDataCenter().getZMHZSY2()[0].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[1].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[2].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[3].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[4].get(pos)).intValue(), ((Integer) getDataCenter().getZMHZSY2()[5].get(pos)).intValue(), ((Short) getDataCenter().getZMHZSY2()[6].get(pos)).shortValue()};
         return ReSE;
     }
 
     public Hashtable<Short, String> getPassTrain1(int from, int to) {
         Hashtable<Short, String> Res = new Hashtable<>((to - from) + 1);
         for (int i = from; i <= to; i++) {
-            short ccwz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort();
+            short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
             Object RenameTrain = Res.get(Short.valueOf(ccwz));
             if (RenameTrain == null) {
                 Res.put(Short.valueOf(ccwz), Integer.toString(i));
             } else {
-                Res.put(Short.valueOf(ccwz), i + "," + RenameTrain);
+                Short valueOf = Short.valueOf(ccwz);
+                Res.put(valueOf, i + "," + RenameTrain);
             }
         }
         return Res;
@@ -364,118 +374,122 @@ public class CoreZZCX {
         char c = 22;
         int loops2 = (to - from) + 1;
         int curCoursor = from;
-
         try {
-            try {
-                int startfileIdx = from / 1000;
-                int skipval = (from % 1000) * 22;
-                InputStream in = dataCenter.getiOFactory().getInpustStream(fileName2 + startfileIdx);
-                BufferedInputStream bis = new BufferedInputStream(in);
-                DataInputStream dis = new DataInputStream(bis);
-                if (skipval > 0) {
-                    try {
-                        dis.skip(skipval);
-                    } catch (Exception e) {
-                        System.out.println("readUTF Error:" + e);
-                        return hashMap;
-                    }
+            int startfileIdx = from / 1000;
+            int skipval = (from % 1000) * 22;
+            InputStream in = getDataCenter().getIOFactory().getInpustStream(fileName2 + startfileIdx);
+            BufferedInputStream bis = new BufferedInputStream(in);
+            DataInputStream dis = new DataInputStream(bis);
+            if (skipval > 0) {
+                try {
+                    dis.skip(skipval);
+                } catch (Exception e) {
+                    LOGGER.error("readUTF Error:", e);
+                    return hashMap;
+                } catch (Throwable th) {
+                    throw th;
                 }
-                byte[] bts = new byte[18];
-                int i = 0;
-                while (i < loops2) {
-                    int dzwz = dis.readShort();
-                    int ccwz = dis.readShort();
-                    dis.read(bts);
-                    char c2 = c;
-                    try {
-                        String tmp = dzwz + "-" + ccwz;
-                        if (hashMap.containsKey(tmp)) {
-                            loops = loops2;
-                            try {
-                                //LogPrint.v(LogPrint.TAG, "重复数据如何处理？？？？？？？");
-                                LOGGER.error("重复数据如何处理？？？？？？？");
-                            } catch (Exception e2) {
-                                // e = e2;
-                                System.out.println("readUTF Error:" + e2);
-                                return hashMap;
-                            }
-                        } else {
-                            loops = loops2;
-                            hashMap.put(tmp, bts.clone());
-                        }
-                        curCoursor++;
-                        if (curCoursor % 1000 == 0 && curCoursor > 0) {
-                            dis.close();
-                            bis.close();
-                            startfileIdx++;
-                            in = dataCenter.getiOFactory().getInpustStream(fileName2 + startfileIdx);
-                            BufferedInputStream bis2 = new BufferedInputStream(in);
-                            dis = new DataInputStream(bis2);
-                            bis = bis2;
-                        }
-                        i++;
-                        c = c2;
-                        loops2 = loops;
-                    } catch (Exception e3) {
-                        //e = e3;
-                        System.out.println("readUTF Error:" + e3);
-                        return hashMap;
-                    } catch (Throwable th2) {
-                        //th = th2;
-                        LOGGER.error("", th2);
-                        throw th2;
-                    }
-                }
-                dis.close();
-                bis.close();
-                in.close();
-            } catch (Throwable th3) {
-                //th = th3;
-                LOGGER.error("", th3);
             }
-        } catch (Exception e4) {
-            //e = e4;
-            LOGGER.error("", e4);
+            byte[] bts = new byte[18];
+            int i = 0;
+            while (i < loops2) {
+                int dzwz = dis.readShort();
+                int ccwz = dis.readShort();
+                dis.read(bts);
+                StringBuilder sb = new StringBuilder();
+                char c2 = c;
+                try {
+                    sb.append(dzwz);
+                    sb.append("-");
+                    sb.append(ccwz);
+                    String tmp = sb.toString();
+                    if (hashMap.containsKey(tmp)) {
+                        loops = loops2;
+                        LOGGER.error("重复数据如何处理？？？？？？？");
+                    } else {
+                        loops = loops2;
+                        hashMap.put(tmp, (byte[]) bts.clone());
+                    }
+                    curCoursor++;
+                    if (curCoursor % 1000 == 0 && curCoursor > 0) {
+                        dis.close();
+                        bis.close();
+                        startfileIdx++;
+                        in = getDataCenter().getIOFactory().getInpustStream(fileName2 + startfileIdx);
+                        BufferedInputStream bis2 = new BufferedInputStream(in);
+                        dis = new DataInputStream(bis2);
+                        bis = bis2;
+                    }
+                    i++;
+                    c = c2;
+                    loops2 = loops;
+                } catch (Exception e3) {
+                    //e = e3;
+                    System.out.println("readUTF Error:" + e3);
+                    return hashMap;
+                } catch (Throwable th3) {
+                    //th = th2;
+                    LOGGER.error("", th3);
+                    throw th3;
+                }
+            }
+            dis.close();
+            bis.close();
+            in.close();
         } catch (Throwable th4) {
-            //th = th4;
             LOGGER.error("", th4);
         }
         return hashMap;
     }
 
     public SimpleTrainInfo getTraininfo(int Pos) {
-        ByteBuffer btsBuffer = ByteBuffer.wrap(dataCenter.getCCData().get(Pos));
+        ByteBuffer btsBuffer = ByteBuffer.wrap(getDataCenter().getCCData().get(Pos));
         SimpleTrainInfo trainInfo = new SimpleTrainInfo();
-        trainInfo.setTrainName(dataCenter.getCC().get(Pos));
-        trainInfo.setTrainDJ(btsBuffer.get());
-        trainInfo.setTrainSf(btsBuffer.get());
-        trainInfo.setTrainInCCTKSYs(btsBuffer.getInt());
-        trainInfo.setTrainInCCTKSYe(btsBuffer.getInt());
-        trainInfo.setTrainSfkt(btsBuffer.get() + (-48) == 1);
-        trainInfo.setTrainXw(String.format("%04d", btsBuffer.getShort()));
-        trainInfo.setTrainBJ(btsBuffer.get() - 48);
-        trainInfo.setTrainKxzq(btsBuffer.get());
-        trainInfo.setTrainKxgl(btsBuffer.getInt());
-        trainInfo.setTrainKsrq(btsBuffer.getInt());
-        trainInfo.setTrainJsrq(btsBuffer.getInt());
-        trainInfo.setNoticeStart(btsBuffer.getInt());
-        trainInfo.setNoticeEnd(btsBuffer.getInt());
-        // 数据来源 000_ddj.json
-        trainInfo.setDdj(((char) btsBuffer.get()) + "" + ((char) btsBuffer.get()) + "" + ((char) btsBuffer.get()));
-        trainInfo.setHcStart(btsBuffer.getInt());
-        trainInfo.setHcEnd(btsBuffer.getInt());
-        trainInfo.setPjdmStart(btsBuffer.getInt());
-        trainInfo.setPjdmEnd(btsBuffer.getInt());
-        trainInfo.setCaceStart(btsBuffer.getInt());
-        trainInfo.setCaceEnd(btsBuffer.getInt());
-        trainInfo.setId(Pos);
+        trainInfo.TrainName = getDataCenter().getCC().get(Pos);
+        trainInfo.TrainDJ = btsBuffer.get();
+        trainInfo.TrainSF = btsBuffer.get();
+        trainInfo.TrainInCCTKSYs = btsBuffer.getInt();
+        trainInfo.TrainInCCTKSYe = btsBuffer.getInt();
+        trainInfo.TrainSFKT = btsBuffer.get() + (-48) == 1;
+        trainInfo.TrainXW = String.format("%04d", Short.valueOf(btsBuffer.getShort()));
+        trainInfo.TrainBJ = btsBuffer.get() - 48;
+        trainInfo.TrainKXZQ = btsBuffer.get();
+        trainInfo.TrainKXGL = btsBuffer.getInt();
+        trainInfo.TrainKSRQ = btsBuffer.getInt();
+        trainInfo.TrainJSRQ = btsBuffer.getInt();
+        trainInfo.noticeStart = btsBuffer.getInt();
+        trainInfo.noticeEnd = btsBuffer.getInt();
+        trainInfo.ddj = ((char) btsBuffer.get()) + "" + ((char) btsBuffer.get()) + "" + ((char) btsBuffer.get());
+        trainInfo.hcStart = btsBuffer.getInt();
+        trainInfo.hcEnd = btsBuffer.getInt();
+        trainInfo.pjdmStart = btsBuffer.getInt();
+        trainInfo.pjdmEnd = btsBuffer.getInt();
+        trainInfo.caceStart = btsBuffer.getInt();
+        trainInfo.caceEnd = btsBuffer.getInt();
+        trainInfo.ID = Pos;
         return trainInfo;
     }
 
     public String toTime(short sTime) {
+        Object valueOf;
+        Object valueOf2;
         int h = sTime / 100;
         int m = sTime % 100;
-        return (h < 10 ? "0" + h : Integer.valueOf(h)) + ":" + (m < 10 ? "0" + m : Integer.valueOf(m));
+        StringBuilder sb = new StringBuilder();
+        if (h < 10) {
+            valueOf = "0" + h;
+        } else {
+            valueOf = Integer.valueOf(h);
+        }
+        sb.append(valueOf);
+        sb.append(":");
+        if (m < 10) {
+            valueOf2 = "0" + m;
+        } else {
+            valueOf2 = Integer.valueOf(m);
+        }
+        sb.append(valueOf2);
+        return sb.toString();
     }
 
     public String lcdj(int lcdj, boolean sfkt) {
@@ -507,49 +521,52 @@ public class CoreZZCX {
         } else {
             dj = "高速动车";
         }
-        return (!sfkt || dj.equals("动车组") || dj.equals("城际高速") || dj.equals("高速动车") || dj.equals("市郊列车")) ? dj : "新空" + dj;
+        if (!sfkt || dj.equals("动车组") || dj.equals("城际高速") || dj.equals("高速动车") || dj.equals("市郊列车")) {
+            return dj;
+        }
+        return "新空" + dj;
     }
 
-    public TrainInfo getxInfo(int CCID, String fullTrainName, String realTrainName, PJInfo pj, short[] Bds, String[] Rds, CCTKBlock Sclp, CCTKBlock Eclp, String dj, int Lc, String[] sfzd, int kxzq, int kxgl, int ksrq, int jsrq, String RcdId, int noticeStart, int noticeEnd, String ddj, int hcStart, int hcEnd, int trainBJ, int caceStart, int caceEnd, SimpleTrainInfo simpleTrainInfo) {
+    public TrainInfo getxInfo(int CCID, String fullTrainName, String RealTrainName, PJInfo pj, short[] Bds, String[] Rds, CCTKBlock Sclp, CCTKBlock Eclp, String dj, int Lc, String[] sfzd, int kxzq, int kxgl, int ksrq, int jsrq, String RcdId, int noticeStart, int noticeEnd, String ddj, int hcStart, int hcEnd, int trainBJ, int caceStart, int caceEnd, SimpleTrainInfo simpleTrainInfo) {
         TrainInfo trainInfo = new TrainInfo();
-        trainInfo.setFullTrainNo(fullTrainName);
-        trainInfo.setCc(realTrainName.trim());
-        trainInfo.setDj(dj.trim());
-        trainInfo.setDd(toTime(Sclp.getDd()));
-        trainInfo.setKd(toTime(Sclp.getKd()));
-        trainInfo.setDd1(toTime(Eclp.getDd()));
-        trainInfo.setLc(Lc);
-        trainInfo.setFz(Rds[0].trim());
-        trainInfo.setDz(Rds[1].trim());
-        trainInfo.setSfz(sfzd[0].trim());
-        trainInfo.setZdz(sfzd[1].trim());
-        trainInfo.setLs(Common.covert2StringTime(Common.getMinites(Eclp.getDd(), Eclp.getKd(), Sclp.getKd(), Eclp.getDay() - Sclp.getDay())));
-        trainInfo.setPj(pj);
-        trainInfo.setKxzq(kxzq);
-        trainInfo.setKxgl(kxgl);
-        trainInfo.setKsrq(ksrq);
-        trainInfo.setYxts(Sclp.getDay() - 48);
-        trainInfo.setJsrq(jsrq);
-        trainInfo.setId(RcdId);
-        trainInfo.setCcId(CCID);
-        trainInfo.setFzCCTKBlock(Sclp);
-        trainInfo.setDzCCTKBlock(Eclp);
-        trainInfo.setNoticeStart(noticeStart);
-        trainInfo.setNoticeEnd(noticeEnd);
-        trainInfo.setDdj(String.valueOf(ddj));
-        trainInfo.setHcStart(hcStart);
-        trainInfo.setHcEnd(hcEnd);
-        trainInfo.setTrainBJ(trainBJ);
-        trainInfo.setCaceStart(caceStart);
-        trainInfo.setCaceEnd(caceEnd);
+        trainInfo.fullTrainNo = fullTrainName;
+        trainInfo.CC = RealTrainName.trim();
+        trainInfo.DJ = dj.trim();
+        trainInfo.DD = toTime(Sclp.getDd());
+        trainInfo.KD = toTime(Sclp.getKd());
+        trainInfo.DD1 = toTime(Eclp.getDd());
+        trainInfo.LC = Lc;
+        trainInfo.FZ = Rds[0].trim();
+        trainInfo.DZ = Rds[1].trim();
+        trainInfo.SFZ = sfzd[0].trim();
+        trainInfo.ZDZ = sfzd[1].trim();
+        trainInfo.LS = Common.covert2StringTime(Common.getMinites(Eclp.getDd(), Eclp.getKd(), Sclp.getKd(), Eclp.getDay() - Sclp.getDay()));
+        trainInfo.PJ = pj;
+        trainInfo.kxzq = kxzq;
+        trainInfo.kxgl = kxgl;
+        trainInfo.ksrq = ksrq;
+        trainInfo.yxts = Sclp.getDay() - 48;
+        trainInfo.jsrq = jsrq;
+        trainInfo.ID = RcdId;
+        trainInfo.CCID = CCID;
+        trainInfo.fzCCTKBlock = Sclp;
+        trainInfo.dzCCTKBlock = Eclp;
+        trainInfo.noticeStart = noticeStart;
+        trainInfo.noticeEnd = noticeEnd;
+        trainInfo.DDJ = String.valueOf(ddj);
+        trainInfo.hcStart = hcStart;
+        trainInfo.hcEnd = hcEnd;
+        trainInfo.trainBJ = trainBJ;
+        trainInfo.caceStart = caceStart;
+        trainInfo.caceEnd = caceEnd;
         NoticeBlock noticeBlock = new NoticeBlock();
-        noticeBlock.setKsrq(trainInfo.getKsrq());
-        noticeBlock.setJsrq(trainInfo.getJsrq());
-        noticeBlock.setKxgl(trainInfo.getKxgl());
-        noticeBlock.setKxzq((byte) trainInfo.getKxzq());
-        noticeBlock.setDay((byte) trainInfo.getYxts());
-        trainInfo.setNoticeBlock(noticeBlock);
-        trainInfo.setBasicYunXingInfo(new YunXingInfo(simpleTrainInfo.getTrainKxzq(), simpleTrainInfo.getTrainKxgl(), simpleTrainInfo.getTrainKsrq(), simpleTrainInfo.getTrainJsrq()));
+        noticeBlock.setKsrq(trainInfo.ksrq);
+        noticeBlock.setJsrq(trainInfo.jsrq);
+        noticeBlock.setKxgl(trainInfo.kxgl);
+        noticeBlock.setKxzq((byte) trainInfo.kxzq);
+        noticeBlock.setDay((byte) trainInfo.yxts);
+        trainInfo.noticeBlock = noticeBlock;
+        trainInfo.setBasicYunXingInfo(new YunXingInfo(simpleTrainInfo.TrainKXZQ, simpleTrainInfo.TrainKXGL, simpleTrainInfo.TrainKSRQ, simpleTrainInfo.TrainJSRQ));
         return trainInfo;
     }
 
@@ -589,7 +606,7 @@ public class CoreZZCX {
         String[] Rds3 = new String[2];
         int i5 = sStarFrom;
         while (i5 <= sStartTo3) {
-            CCTKBlock cctkFz = new CCTKBlock(dataCenter.getCCTK().get(i5));
+            CCTKBlock cctkFz = new CCTKBlock(getDataCenter().getCCTK().get(i5));
             short ccwz2 = cctkFz.getCcwz();
             Object iobj = Re24.get(Short.valueOf(ccwz2));
             if (iobj == null) {
@@ -602,23 +619,21 @@ public class CoreZZCX {
             } else {
                 String[] TrainRenames2 = iobj.toString().split(",");
                 int RenamesCount2 = TrainRenames2.length;
-                // 出发站所在里程
                 short lc_fz2 = cctkFz.getLc();
                 int j3 = 0;
                 PJInfo mPJInfo3 = mPJInfo2;
                 while (j3 < RenamesCount2) {
                     int idx_dz = Integer.parseInt(TrainRenames2[j3]);
-                    // 到达站所在里程
-                    short lc_dz2 = ByteBuffer.wrap(dataCenter.getCCTK().get(idx_dz)).getShort(i4);
+                    short lc_dz2 = ByteBuffer.wrap(getDataCenter().getCCTK().get(idx_dz)).getShort(i4);
                     if (lc_dz2 > lc_fz2) {
                         SimpleTrainInfo tInfo = coreZZCX.getTraininfo(ccwz2);
                         int j4 = j3;
                         int RenamesCount3 = RenamesCount2;
-                        CCTKBlock cctkDz = new CCTKBlock(dataCenter.getCCTK().get(idx_dz));
-                        String[] SfZd = coreZZCX.getTrainSEinfo(tInfo.getTrainInCCTKSYs(), tInfo.getTrainInCCTKSYe());
-                        String dj = coreZZCX.lcdj(tInfo.getTrainDJ(), tInfo.isTrainSfkt());
+                        CCTKBlock cctkDz = new CCTKBlock(getDataCenter().getCCTK().get(idx_dz));
+                        String[] SfZd = coreZZCX.getTrainSEinfo(tInfo.TrainInCCTKSYs, tInfo.TrainInCCTKSYe);
+                        String dj = coreZZCX.lcdj(tInfo.TrainDJ, tInfo.TrainSFKT);
                         int Lc2 = lc_dz2 - lc_fz2;
-                        if (tInfo.getTrainBJ() == 1) {
+                        if (tInfo.TrainBJ == 1) {
                             double[] JcJb = coreZZCX.CountPJ(Lc2);
                             cxResult3 = cxResult4;
                             j2 = j4;
@@ -629,7 +644,7 @@ public class CoreZZCX {
                             lc_dz = ccwz2;
                             Re23 = Re24;
                             i3 = i5;
-                            mPJInfo = CountSJPJ(tInfo.getTrainDJ(), tInfo.getTrainSf(), tInfo.isTrainSfkt(), JcJb, Lc, tInfo.getTrainXw());
+                            mPJInfo = CountSJPJ(tInfo.TrainDJ, tInfo.TrainSF, tInfo.TrainSFKT, JcJb, Lc, tInfo.TrainXW);
                             Rds2 = Rds3;
                         } else {
                             lc_fz = lc_fz2;
@@ -641,9 +656,9 @@ public class CoreZZCX {
                             RenamesCount = RenamesCount3;
                             lc_dz = ccwz2;
                             i3 = i5;
-                            if (tInfo.getPjdmStart() != 99999) {
+                            if (tInfo.pjdmStart != 99999) {
                                 Rds2 = Rds3;
-                                mPJInfo = getPrice(tInfo.getTrainName(), cctkFz.getZmwz(), cctkDz.getZmwz(), tInfo.getPjdmStart(), tInfo.getPjdmEnd(), getRq(), cctkFz.getDay() - 48);
+                                mPJInfo = getPrice(tInfo.TrainName, cctkFz.getZmwz(), cctkDz.getZmwz(), tInfo.pjdmStart, tInfo.pjdmEnd, getRq(), cctkFz.getDay() - 48);
                             } else {
                                 Rds2 = Rds3;
                                 mPJInfo = coreZZCX.getPrice(cctkFz.getZmwz(), cctkDz.getZmwz(), lc_dz);
@@ -652,13 +667,13 @@ public class CoreZZCX {
                         Bds3[0] = cctkFz.getZmwz();
                         Bds3[1] = cctkDz.getZmwz();
                         for (int s = 0; s < 2; s++) {
-                            Rds2[s] = dataCenter.getZMHZSY1().get(Bds3[s]).trim();
+                            Rds2[s] = getDataCenter().getZMHZSY1().get(Bds3[s]).trim();
                         }
                         int s2 = cctkFz.getCzcc();
                         int posinfull = s2 - 48;
-                        int sStartTo4 = tInfo.getId();
-                        String str = tInfo.getTrainName();
-                        String str2 = tInfo.getTrainName();
+                        int sStartTo4 = tInfo.ID;
+                        String str = tInfo.TrainName;
+                        String str2 = tInfo.TrainName;
                         if (posinfull != 0) {
                             str2 = str2.split("/")[posinfull - 1];
                         }
@@ -670,7 +685,7 @@ public class CoreZZCX {
                         ccwz = lc_dz;
                         j = j2;
                         cxResult2 = cxResult3;
-                        cxResult2.add(getxInfo(sStartTo4, str, str3, mPJInfo, Bds2, Rds2, cctkFz, cctkDz, dj, Lc, SfZd, tInfo.getTrainKxzq(), tInfo.getTrainKxgl(), tInfo.getTrainKsrq(), tInfo.getTrainJsrq(), i3 + "-" + j2, tInfo.getNoticeStart(), tInfo.getNoticeEnd(), tInfo.getDdj(), tInfo.getHcStart(), tInfo.getHcEnd(), tInfo.getTrainBJ(), tInfo.getCaceStart(), tInfo.getCaceEnd(), tInfo));
+                        cxResult2.add(getxInfo(sStartTo4, str, str3, mPJInfo, Bds2, Rds2, cctkFz, cctkDz, dj, Lc, SfZd, tInfo.TrainKXZQ, tInfo.TrainKXGL, tInfo.TrainKSRQ, tInfo.TrainJSRQ, i3 + "-" + j2, tInfo.noticeStart, tInfo.noticeEnd, tInfo.ddj, tInfo.hcStart, tInfo.hcEnd, tInfo.TrainBJ, tInfo.caceStart, tInfo.caceEnd, tInfo));
                         mPJInfo3 = mPJInfo;
                     } else {
                         j = j3;
@@ -720,26 +735,29 @@ public class CoreZZCX {
     }
 
     public String GetZMbyCC(int pos) {
-        int CCTKpos = (Integer) dataCenter.getCCTKSY()[0].get(pos);
-        byte[] bts = dataCenter.getCCTK().get(CCTKpos);
+        int CCTKpos = ((Integer) getDataCenter().getCCTKSY()[0].get(pos)).intValue();
+        byte[] bts = getDataCenter().getCCTK().get(CCTKpos);
         short idx = ByteBuffer.wrap(bts).getShort(8);
         return getZM(idx);
     }
 
     public Short GetZMbyCC_zmhzsyPos(int pos) {
-        int CCTKpos = (Integer) dataCenter.getCCTKSY()[0].get(pos);
-        byte[] bts = dataCenter.getCCTK().get(CCTKpos);
-        return ByteBuffer.wrap(bts).getShort(8);
+        int CCTKpos = ((Integer) getDataCenter().getCCTKSY()[0].get(pos)).intValue();
+        byte[] bts = getDataCenter().getCCTK().get(CCTKpos);
+        short idx = ByteBuffer.wrap(bts).getShort(8);
+        return Short.valueOf(idx);
     }
 
     public String getZM(int pos) {
-        return dataCenter.getZMHZSY1().get(pos);
+        String zm = getDataCenter().getZMHZSY1().get(pos);
+        return zm;
     }
 
     public String[] getTrainSEinfo(int StarPos, int EndPos) {
         String StarName = GetZMbyCC(StarPos);
         String EndName = GetZMbyCC(EndPos);
-        return new String[]{StarName, EndName};
+        String[] Rtn = {StarName, EndName};
+        return Rtn;
     }
 
     public void resetNessaryVariable() {
@@ -750,40 +768,98 @@ public class CoreZZCX {
         this.priceKeysets = null;
     }
 
-    public List<TrainInfo> query(String fz, String dz, int rq) {
+    public ArrayList<TrainInfo> query(String fz, String dz, int rq) {
         resetNessaryVariable();
         this.tmpDZ = dz;
         setRq(rq);
         int[] ST = getstation(fz, 0);
         int[] ET = getstation(dz, 0);
-        String errorStation = "";
+        String ErrStation = "";
         int RtnVal = 0;
         if (ST[1] == 0) {
-            errorStation = "起始站";
+            ErrStation = "起始站";
             RtnVal = 1;
         }
         if (ET[1] == 0) {
-            errorStation = "终点站";
+            ErrStation = "终点站";
             RtnVal = 2;
         }
         if (ST[1] == 0 && ET[1] == 0) {
-            errorStation = "起始站和终点站";
+            ErrStation = "起始站和终点站";
             RtnVal = 3;
         }
-        if (errorStation.length() > 0) {
+        if (ErrStation.length() > 0) {
             setErrCode(RtnVal);
             return null;
         }
         return GetPassTrainInfo(ST, ET);
     }
 
-    public HashSet<Short> searchByTransfer(String fz, String dz) {
-        int[] sStar = getstation(fz, 0);
-        int[] sEnd = getstation(dz, 0);
-        HashSet<Short> stationsStar = getAllStationPass_cctkPos(sStar[0], sStar[1], getCHstationIdxs_zmhzsy1(fz), true);
-        HashSet<Short> stationsEnd = getAllStationPass_cctkPos(sEnd[0], sEnd[1], getCHstationIdxs_zmhzsy1(dz), false);
-        stationsStar.retainAll(stationsEnd);
-        return stationsStar;
+    public List<TransferExCollection> searchByTransfer(String fz, String dz) {
+        HashSet<Short> stationsEnd;
+        int[] sStar;
+        int[] sEnd;
+        int[] sStar2 = getstation(fz, 0);
+        int[] sEnd2 = getstation(dz, 0);
+        HashSet<Short> stationsStar = getAllStationPass_cctkPos(sStar2[0], sStar2[1], getSameCityStations(sStar2[6]), true);
+        HashSet<Short> stationsEnd2 = getAllStationPass_cctkPos(sEnd2[0], sEnd2[1], getSameCityStations(sEnd2[6]), false);
+        List<StationEx> li1 = new ArrayList<>();
+        List<StationEx> li2 = new ArrayList<>();
+        Iterator<Short> it = stationsStar.iterator();
+        while (it.hasNext()) {
+            short idx = it.next().shortValue();
+            li1.add(new StationEx(Short.valueOf(idx), getMainStation(idx)));
+        }
+        Iterator<Short> it2 = stationsEnd2.iterator();
+        while (it2.hasNext()) {
+            short idx2 = it2.next().shortValue();
+            li2.add(new StationEx(Short.valueOf(idx2), getMainStation(idx2)));
+        }
+        new ArrayList();
+        HashMap<Short, ArrayList<TransferEx>> hashMap = new HashMap<>();
+        List<TransferExCollection> result = new ArrayList<>();
+        for (StationEx s1 : li1) {
+            StationEx station = null;
+            int i = 0;
+            while (true) {
+                if (i >= li2.size()) {
+                    stationsEnd = stationsEnd2;
+                    break;
+                }
+                stationsEnd = stationsEnd2;
+                if (!s1.getMainIdx().equals(li2.get(i).getMainIdx())) {
+                    i++;
+                    stationsEnd2 = stationsEnd;
+                } else {
+                    StationEx station2 = li2.get(i);
+                    station = station2;
+                    break;
+                }
+            }
+            if (station == null) {
+                sStar = sStar2;
+                sEnd = sEnd2;
+            } else {
+                short mainIdx = station.getMainIdx().shortValue();
+                ArrayList<TransferEx> transferExes = hashMap.get(Short.valueOf(mainIdx));
+                if (transferExes == null) {
+                    transferExes = new ArrayList<>();
+                }
+                sStar = sStar2;
+                sEnd = sEnd2;
+                transferExes.add(new TransferEx(s1.getIdx().shortValue(), station.getIdx().shortValue(), s1.getMainIdx().shortValue()));
+                hashMap.put(Short.valueOf(mainIdx), transferExes);
+                li2.remove(i);
+            }
+            stationsEnd2 = stationsEnd;
+            sStar2 = sStar;
+            sEnd2 = sEnd;
+        }
+        for (Short sh : hashMap.keySet()) {
+            short key = sh.shortValue();
+            result.add(new TransferExCollection(new TransferEx(key, key, key), hashMap.get(Short.valueOf(key))));
+        }
+        return result;
     }
 
     public int[] getMinDistance(String fz, String dz) {
@@ -795,17 +871,17 @@ public class CoreZZCX {
         int trainCounter = 0;
         int minDistance = 9999999;
         for (int i = sStarFrom; i <= sStartTo; i++) {
-            short ccwz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort();
+            short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
             Object iobj = Re2.get(Short.valueOf(ccwz));
             if (iobj != null) {
                 String[] TrainRenames = iobj.toString().split(",");
                 int RenamesCount = TrainRenames.length;
-                short lc_fz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort(2);
+                short lc_fz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort(2);
                 int j = 0;
                 while (j < RenamesCount) {
                     String[] TrainRenames2 = TrainRenames;
                     int idx_dz = Integer.parseInt(TrainRenames[j]);
-                    short lc_dz = ByteBuffer.wrap(dataCenter.getCCTK().get(idx_dz)).getShort(2);
+                    short lc_dz = ByteBuffer.wrap(getDataCenter().getCCTK().get(idx_dz)).getShort(2);
                     if (lc_dz > lc_fz) {
                         int tmpDistance = lc_dz - lc_fz;
                         minDistance = Math.min(tmpDistance, minDistance);
@@ -821,24 +897,25 @@ public class CoreZZCX {
 
     public HashSet<Short> getAllStationPass_cctkPos(int cctkStart, int cctkEnd, HashSet<Short> stationIdxs, boolean afterStations) {
         HashSet<Short> hSet = new HashSet<>();
-        for (int i = cctkStart; i < cctkEnd; i++) {
-            short ccwz = ByteBuffer.wrap(dataCenter.getCCTK().get(i)).getShort();
+        for (int i = cctkStart; i <= cctkEnd; i++) {
+            short ccwz = ByteBuffer.wrap(getDataCenter().getCCTK().get(i)).getShort();
             boolean beginToadd = false;
             SimpleTrainInfo trainInfo = getTraininfo(ccwz);
-            for (int j = trainInfo.getTrainInCCTKSYs(); j <= trainInfo.getTrainInCCTKSYe(); j++) {
-                short zmIdx = GetZMbyCC_zmhzsyPos(j);
+            for (int j = trainInfo.TrainInCCTKSYs; j <= trainInfo.TrainInCCTKSYe; j++) {
+                short zmIdx = GetZMbyCC_zmhzsyPos(j).shortValue();
                 if (afterStations) {
                     if (beginToadd) {
-                        hSet.add(zmIdx);
+                        getZM(zmIdx);
+                        hSet.add(Short.valueOf(zmIdx));
                     }
-                    if (stationIdxs.contains(zmIdx)) {
+                    if (stationIdxs.contains(Short.valueOf(zmIdx))) {
                         beginToadd = true;
                     }
                 } else {
                     if (!beginToadd) {
-                        hSet.add(zmIdx);
+                        hSet.add(Short.valueOf(zmIdx));
                     }
-                    if (stationIdxs.contains(zmIdx)) {
+                    if (stationIdxs.contains(Short.valueOf(zmIdx))) {
                         beginToadd = true;
                     }
                 }
@@ -847,7 +924,7 @@ public class CoreZZCX {
         return hSet;
     }
 
-    public double getNewBxf(double bxfBefore) {
+    public double getNewBxf(double bxfBefore, int Jflc, boolean sfkt, int lcdj) {
         if (bxfBefore * 10.0d * 0.2d == ((int) Math.floor(bxfBefore * 10.0d * 0.2d))) {
             return ((int) Math.floor((10.0d * bxfBefore) * 0.2d)) / 2.0f;
         }
@@ -859,14 +936,14 @@ public class CoreZZCX {
         if (priceSets == null) {
             priceSets = getPJByZMWZ(fzZMWZ);
         }
-        byte[] pjBts = priceSets.get(dzZMWZ + "-" + ccwz);
+        byte[] pjBts = priceSets.get(String.valueOf(dzZMWZ) + "-" + String.valueOf(ccwz));
         return getPJInfoFromBytes(pjBts);
     }
 
     public PJInfo getPrice(String train, int fzZMWZ, int dzZMWZ, int pjdmStart, int pjdmEnd, int rq, int yxts) {
         int i = pjdmEnd;
         PJInfo pjInfo = new PJInfo();
-        HashMap<String, byte[]> priceSets = getPriceKeysets().get(fzZMWZ);
+        HashMap<String, byte[]> priceSets = getPriceKeysets().get(Integer.valueOf(fzZMWZ));
         if (priceSets == null) {
             priceSets = getPriceByZMWZ(fzZMWZ);
             getPriceKeysets().put(String.valueOf(fzZMWZ), priceSets);
@@ -875,28 +952,28 @@ public class CoreZZCX {
         if (pjdmStart != i && rq > 0) {
             int i2 = pjdmStart;
             while (i2 <= i) {
-                int ksrq = (Integer) dataCenter.getPJDM()[0].get(i2);
-                int jsrq = (Integer) dataCenter.getPJDM()[1].get(i2);
-                int xw = (Byte) dataCenter.getPJDM()[2].get(i2);
-                int kxgl = (Integer) dataCenter.getPJDM()[3].get(i2);
-                int kxzq = (Byte) dataCenter.getPJDM()[4].get(i2);
-                int pjcode = (Integer) dataCenter.getPJDM()[c].get(i2);
+                int ksrq = ((Integer) getDataCenter().getPJDM()[0].get(i2)).intValue();
+                int jsrq = ((Integer) getDataCenter().getPJDM()[1].get(i2)).intValue();
+                int xw = ((Byte) getDataCenter().getPJDM()[2].get(i2)).byteValue();
+                int kxgl = ((Integer) getDataCenter().getPJDM()[3].get(i2)).intValue();
+                int kxzq = ((Byte) getDataCenter().getPJDM()[4].get(i2)).byteValue();
+                int pjcode = ((Integer) getDataCenter().getPJDM()[c].get(i2)).intValue();
                 int i3 = i2;
                 int todayState = ZZCXCenter.trainStateToday(rq, ksrq, jsrq, kxzq, kxgl, yxts, false, null);
                 if (todayState == 1) {
-                    byte[] pjBts = priceSets.get(dzZMWZ + "-" + pjcode);
+                    byte[] pjBts = priceSets.get(String.valueOf(dzZMWZ) + "-" + String.valueOf(pjcode));
                     PJInfo pjInfoTemp = getPJInfoFromBytes(pjBts);
                     if (xw == 51) {
-                        pjInfo.setYws(pjInfoTemp.getYws());
-                        pjInfo.setYwz(pjInfoTemp.getYwz());
-                        pjInfo.setYwx(pjInfoTemp.getYwx());
+                        pjInfo.YWs = pjInfoTemp.YWs;
+                        pjInfo.YWz = pjInfoTemp.YWz;
+                        pjInfo.YWx = pjInfoTemp.YWx;
                     } else if (xw == 52 || xw == 65 || xw == 70) {
-                        pjInfo.setRws(pjInfoTemp.getRws());
-                        pjInfo.setRwx(pjInfoTemp.getRwx());
+                        pjInfo.RWs = pjInfoTemp.RWs;
+                        pjInfo.RWx = pjInfoTemp.RWx;
                     } else if (xw == 77) {
-                        pjInfo.setYdz(pjInfoTemp.getYdz());
+                        pjInfo.YD = pjInfoTemp.YD;
                     } else if (xw == 79) {
-                        pjInfo.setEdz(pjInfoTemp.getEdz());
+                        pjInfo.ED = pjInfoTemp.ED;
                     } else if (xw == 122) {
                         pjInfo = pjInfoTemp;
                     }
@@ -907,9 +984,10 @@ public class CoreZZCX {
             }
             return pjInfo;
         }
-        int pjCode = (Integer) dataCenter.getPJDM()[5].get(pjdmStart);
+        int pjCode = ((Integer) getDataCenter().getPJDM()[5].get(pjdmStart)).intValue();
         byte[] pjBts2 = priceSets.get(dzZMWZ + "-" + pjCode);
-        return getPJInfoFromBytes(pjBts2);
+        PJInfo pjInfo2 = getPJInfoFromBytes(pjBts2);
+        return pjInfo2;
     }
 
     public PJInfo getPrice(String train, int fzZMWZ, int dzZMWZ, int pjdmStart, int pjdmEnd, String ddddd) {
@@ -917,14 +995,14 @@ public class CoreZZCX {
     }
 
     public HashMap<String, byte[]> getPriceByZMWZ(int zmwz) {
-        int pjdmStart = (Integer) dataCenter.getZMHZSY2()[4].get(zmwz);
-        int pjdmEnd = (Integer) dataCenter.getZMHZSY2()[5].get(zmwz);
+        int pjdmStart = ((Integer) getDataCenter().getZMHZSY2()[4].get(zmwz)).intValue();
+        int pjdmEnd = ((Integer) getDataCenter().getZMHZSY2()[5].get(zmwz)).intValue();
         return loadPjsets(pjdmStart, pjdmEnd, true);
     }
 
     public HashMap<String, byte[]> getPJByZMWZ(int zmwz) {
-        int zjpjStart = (Integer) dataCenter.getZMHZSY2()[2].get(zmwz);
-        int zjpjEnd = (Integer) dataCenter.getZMHZSY2()[3].get(zmwz);
+        int zjpjStart = ((Integer) getDataCenter().getZMHZSY2()[2].get(zmwz)).intValue();
+        int zjpjEnd = ((Integer) getDataCenter().getZMHZSY2()[3].get(zmwz)).intValue();
         return loadPjsets(zjpjStart, zjpjEnd, false);
     }
 
@@ -932,30 +1010,31 @@ public class CoreZZCX {
         PJInfo pjInfo = new PJInfo();
         if (bts != null) {
             ByteBuffer bb = ByteBuffer.wrap(bts);
-            Double tmppj = bb.getShort() / 10.0d;
+            Double tmppj = Double.valueOf(bb.getShort() / 10.0d);
             String str = "—";
-            pjInfo.setYz(tmppj == 0.0d ? str : getNumberFormat().format(tmppj));
-            Double tmppj2 = bb.getShort() / 10.0d;
-            pjInfo.setRz(tmppj2 == 0.0d ? str : getNumberFormat().format(tmppj2));
-            Double tmppj3 = bb.getShort() / 10.0d;
-            pjInfo.setYws(tmppj3 == 0.0d ? str : getNumberFormat().format(tmppj3));
-            Double tmppj4 = bb.getShort() / 10.0d;
-            pjInfo.setYwz(tmppj4 == 0.0d ? str : getNumberFormat().format(tmppj4));
-            Double tmppj5 = bb.getShort() / 10.0d;
-            pjInfo.setYwx(tmppj5 == 0.0d ? str : getNumberFormat().format(tmppj5));
-            Double tmppj6 = bb.getShort() / 10.0d;
-            pjInfo.setRws(tmppj6 == 0.0d ? str : getNumberFormat().format(tmppj6));
-            Double tmppj7 = bb.getShort() / 10.0d;
-            pjInfo.setRwx(tmppj7 == 0.0d ? str : getNumberFormat().format(tmppj7));
-            Double tmppj8 = bb.getShort() / 10.0d;
-            pjInfo.setEdz(tmppj8 == 0.0d ? str : getNumberFormat().format(tmppj8));
-            Double tmppj9 = bb.getShort() / 10.0d;
-            if (tmppj9 != 0.0d) {
+            pjInfo.YZ = tmppj.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj);
+            Double tmppj2 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.RZ = tmppj2.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj2);
+            Double tmppj3 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.YWs = tmppj3.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj3);
+            Double tmppj4 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.YWz = tmppj4.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj4);
+            Double tmppj5 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.YWx = tmppj5.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj5);
+            Double tmppj6 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.RWs = tmppj6.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj6);
+            Double tmppj7 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.RWx = tmppj7.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj7);
+            Double tmppj8 = Double.valueOf(bb.getShort() / 10.0d);
+            pjInfo.ED = tmppj8.doubleValue() == 0.0d ? str : getNumberFormat().format(tmppj8);
+            Double tmppj9 = Double.valueOf(bb.getShort() / 10.0d);
+            if (tmppj9.doubleValue() != 0.0d) {
                 str = getNumberFormat().format(tmppj9);
             }
-            pjInfo.setYdz(str);
+            pjInfo.YD = str;
         } else {
-            LOGGER.error("price 票价为空");
+            //LogPrinter.v(LogPrinter.TAG, "price 票价为空");
+            LOGGER.warn("price 票价为空");
         }
         return pjInfo;
     }
@@ -966,6 +1045,10 @@ public class CoreZZCX {
 
     public void setErrCode(int errCode) {
         this.ErrCode = errCode;
+    }
+
+    private DataCenter getDataCenter() {
+        return dataCenter;
     }
 
     public ArrayList<Integer> getkSetCHstations() {
@@ -1010,4 +1093,5 @@ public class CoreZZCX {
     public void setRq(int rq) {
         this.rq = rq;
     }
+
 }
