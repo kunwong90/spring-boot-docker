@@ -5,7 +5,7 @@ spring:
     url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
     username: root
     password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   main:
     allow-circular-references: true
 server:
@@ -14,9 +14,6 @@ server:
     #max-threads: 1 # 最大工作线程数量,Spring Boot 2.3以后改为了server.tomcat.threads.max
     threads:
       max: 1
-arthas:
-  agent-id: hsehdfsfghhwertyfad
-  tunnel-server: ws://192.168.65.128:7777/ws
 mybatis:
   config-location: classpath:mybatis-config.xml
   mapper-locations: classpath:mapper/*.xml
